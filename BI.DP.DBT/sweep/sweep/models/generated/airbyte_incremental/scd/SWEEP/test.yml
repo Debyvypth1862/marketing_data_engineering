@@ -1,0 +1,25 @@
+models:
+  - name: FTD_REGISTRATION_REPORT_SCD
+    columns:
+      - name: _AIRBYTE_UNIQUE_KEY
+        data_tests:
+          - unique:
+              config:
+                where: "_AIRBYTE_ACTIVE_ROW = 1"
+
+  - name: DYNAMIC_VARIABLES_REPORT_SCD
+    columns:
+      - name: _AIRBYTE_UNIQUE_KEY
+        data_tests:
+          - unique:
+              config:
+                where: "_AIRBYTE_ACTIVE_ROW = 1"
+
+
+  - name: REGISTRATION_REPORT_SCD
+    columns:
+      - name: _AIRBYTE_UNIQUE_KEY
+        data_tests:
+          - unique:
+              config:
+                where: "_AIRBYTE_ACTIVE_ROW = 1"

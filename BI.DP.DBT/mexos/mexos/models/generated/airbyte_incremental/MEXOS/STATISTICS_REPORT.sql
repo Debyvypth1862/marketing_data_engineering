@@ -1,0 +1,44 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_UNIQUE_KEY", "_AIRBYTE_EMITTED_AT"],
+    unique_key = "_AIRBYTE_UNIQUE_KEY",
+    database = env_var('RAW_DATABASE'),
+    schema = "MEXOS",
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+-- depends_on: {{ ref('STATISTICS_REPORT_SCD') }}
+select
+    _AIRBYTE_UNIQUE_KEY,
+    DATE,
+    CLICK_ID,
+    CASINO_NET_GAMING_COMMISSION,
+    CASINO_RFD_AMT,
+    CASINO_RFD_CNT,
+    CASINO_SIGNUPS_CNT,
+    COMMISSION,
+    DEPOSIT_CNT,
+    IMPRESSIONS,
+    NET_GAMING_AFTER_DEDUCTION,
+    SPORT_NET_GAMING_COMMISSION,
+    SPORT_RFD_AMT,
+    SPORT_RFD_CNT,
+    SPORT_SIGNUPS_CNT,
+    TOTAL_BONUSES_EUR,
+    UNIQUE_CLICKS,
+    WINS,
+    WITHDRAWAL_AMT,
+    WITHDRAWAL_CNT,
+    TOTAL_DEPOSIT_CNT,
+    TOTAL_DEPOSIT_AMT,
+    TRACKER_LOGIN_ID,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    S3_PATH,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT,
+    _AIRBYTE_STATISTICS_REPORT_HASHID
+from {{ ref('STATISTICS_REPORT_SCD') }}
+-- STATISTICS_REPORT from {{ source('MEXOS', '_AIRBYTE_RAW_STATISTICS_REPORT_STREAM') }}
+where 1 = 1
+and _AIRBYTE_ACTIVE_ROW = 1
+{{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+

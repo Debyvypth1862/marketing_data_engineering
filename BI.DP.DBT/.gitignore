@@ -1,0 +1,15 @@
+.env
+.dbt
+build
+dbt
+logs
+kiotviet
+venv
+.idea
+package-lock.yml
+.venv
+*/*/target
+dbt_packages
+.vscode
+test
+.DS_Store

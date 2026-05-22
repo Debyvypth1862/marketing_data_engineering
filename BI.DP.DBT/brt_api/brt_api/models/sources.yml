@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: BRT
+    database: RAW
+    schema: BRT
+    tables:
+      - name: OFFERS
+
+  - name: BRC
+    database: RAW
+    schema: BRC
+    tables:
+      - name: CAMPAIGN_EARNING
+      - name: CAMPAIGN_TRACKERS
+      - name: CAMPAIGNS
+      - name: BRANDS
+      - name: TRACKER_LOGINS
+      - name: PUBLISHERS
+      - name: ADVERTISERS
+      - name: POSTBACK_TRACKING
+
+  - name: EXP_PUBLIC
+    database: EXP
+    schema: PUBLIC
+    tables:
+      - name: FACT_OFFER

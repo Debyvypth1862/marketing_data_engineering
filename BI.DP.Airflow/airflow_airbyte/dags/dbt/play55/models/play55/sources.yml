@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: APOSTA_PREMIA
+    database: STG
+    schema: APOSTA_PREMIA
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+    tables:
+      - name: PLAY55_VENDAS

@@ -1,0 +1,38 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = "_AIRBYTE_AB_ID",
+	database = env_var('RAW_DATABASE'),
+    schema = "BRC",
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+-- depends_on: {{ ref('POSTBACK_EXTRA_VARIABLES_AB2') }}
+select
+	POEV_ID,
+    POEV_VARIABLE9,
+    POEV_VARIABLE8,
+    POEV_VARIABLE7,
+    POEV_VARIABLE6,
+    POEV_VARIABLE17,
+    POEV_VARIABLE5,
+    POEV_VARIABLE16,
+    POEV_VARIABLE19,
+    POEV_VARIABLE18,
+    POEV_MSCLKID,
+    POEV_TABCLID,
+    POEV_MST_CONTACT_ID,
+    POEV_CLICKID,
+    POEV_TWCLID,
+    POEV_VARIABLE13,
+    POEV_VARIABLE12,
+    POEV_VARIABLE15,
+    POEV_VARIABLE14,
+    POEV_VARIABLE20,
+    POEV_VARIABLE11,
+    POEV_VARIABLE10,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+	{{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('POSTBACK_EXTRA_VARIABLES_AB2') }}
+-- POSTBACK_EXTRA_VARIABLES from {{ source('BRC', '_AIRBYTE_RAW_POSTBACK_EXTRA_VARIABLES') }}
+where 1 = 1

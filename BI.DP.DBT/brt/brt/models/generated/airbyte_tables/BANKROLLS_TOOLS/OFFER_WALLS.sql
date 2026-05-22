@@ -1,0 +1,73 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    database = env_var('RAW_DATABASE'),
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+-- depends_on: {{ ref('OFFER_WALLS_STG') }}
+select
+    
+    FEATURED,
+    PREVIEW_TEXT_COLOR,
+    LOADER,
+    LANGUAGE_ID,
+    UUID,
+    RIBBON_THREE,
+    REVIEWED,
+    ID,
+    STATE_ID,
+    OFFER_TYPE,
+    UPDATE_APPROVED,
+    {{ adapter.quote('order') }},
+    OFFERS,
+    RIBBON_TWO,
+    SHOW_FOOTER,
+    SHOW_PREVIEW_BUTTON,
+    ORDER_TIME_PERIOD,
+    COUNT,
+    RIBBON,
+    FOOTER_SCRIPT,
+    ORDER_DIRECTION,
+    PARAMS,
+    IS_DEFAULT,
+    VERSION,
+    CREATED_BY,
+    DELETED_AT,
+    LICENSE_STATUS,
+    TRAFFIC_SOURCE,
+    AFTER_BODY_SCRIPT,
+    USER_ID,
+    NAME,
+    UPDATED_BY,
+    RIBBON_ONE,
+    COUNTRY_ID,
+    LICENSED_STATES,
+    TEMPLATE,
+    CREATED_AT,
+    AUTO_STARS_MINIMUM,
+    AUTO_STARS,
+    GEO,
+    CUSTOM_ORDER,
+    SEARCH,
+    UPDATED_AT,
+    PUBLISHER_KEY_ID,
+    ARCHIVED_AT,
+    PREVIEW_BUTTON_COLOR,
+    PAYMENT_OPTION,
+    LICENSED_COUNTRY,
+    BR_STATUS,
+    ORDER_BY,
+    HEADER_SCRIPT,
+    CURRENCY_ID,
+    LANDERS,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT,
+    _AIRBYTE_OFFER_WALLS_HASHID
+from {{ ref('OFFER_WALLS_STG') }}
+-- OFFER_WALLS from {{ source('BRT', '_AIRBYTE_RAW_OFFER_WALLS') }}
+where 1 = 1
+
+

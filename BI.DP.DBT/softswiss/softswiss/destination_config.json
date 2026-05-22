@@ -1,0 +1,19 @@
+{
+    "host": "<your-account>.snowflakecomputing.com",
+    "role": "AIRBYTE_ROLE",
+    "schema": "AIRBYTE",
+    "database": "AIRBYTE",
+    "username": "AIRBYTE_USER",
+    "warehouse": "<YOUR_WAREHOUSE>",
+    "credentials": {
+        "password": "<YOUR_PASSWORD>",
+        "auth_type": "Username and Password"
+    },
+    "loading_method": {
+        "method": "GCS Staging",
+        "project_id": "<YOUR_GCP_PROJECT_ID>",
+        "bucket_name": "<YOUR_GCS_BUCKET>",
+        "credentials_json": "<YOUR_GCP_SERVICE_ACCOUNT_JSON>"
+    },
+    "file_buffer_count": 10
+}

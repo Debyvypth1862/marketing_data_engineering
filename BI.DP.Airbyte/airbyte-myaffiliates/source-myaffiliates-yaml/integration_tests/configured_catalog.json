@@ -1,0 +1,176 @@
+{
+  "streams": [
+    {
+      "stream": {
+        "name": "customer_report_stream",
+        "json_schema": {
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "properties": {
+            "FTD": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "NDC": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "date": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Media": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Clicks": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Income": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Bonuses": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Channel": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Payload": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Signups": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Campaign": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Customer": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Deposits": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Admin fee": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Pay period": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Impressions": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Campaign group": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Customer group": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Tracker Login Id": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Qualified Players": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "Total Net Revenue": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        },
+        "default_cursor_field": [
+          "date"
+        ],
+        "supported_sync_modes": [
+          "full_refresh",
+          "incremental"
+        ],
+        "source_defined_cursor": true,
+        "source_defined_primary_key": [
+          [
+            "date"
+          ],
+          [
+            "tracker_login_id"
+          ],
+          [
+            "Payload"
+          ]
+        ]
+      },
+      "sync_mode": "incremental",
+      "primary_key": [
+        [
+          "date"
+        ],
+        [
+          "tracker_login_id"
+        ],
+        [
+          "Payload"
+        ]
+      ],
+      "cursor_field": [
+        "date"
+      ],
+      "destination_sync_mode": "append_dedup"
+    }
+  ]
+}

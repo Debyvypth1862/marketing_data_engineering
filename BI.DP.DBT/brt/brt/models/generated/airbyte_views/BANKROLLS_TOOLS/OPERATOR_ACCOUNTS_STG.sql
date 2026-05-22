@@ -1,0 +1,67 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to build a hash column based on the values of this record
+-- depends_on: {{ ref('OPERATOR_ACCOUNTS_AB2') }}
+select
+    {{ dbt_utils.surrogate_key([
+        boolean_to_string('REPORT_ACTIVITY_ENABLED'),
+        'NOTES',
+        'CONTACT_PHONE',
+        'OPERATOR_ID',
+        'BR_TRACKER_LOGIN_ID',
+        'CPA_OUT',
+        boolean_to_string('IS_PARENT'),
+        'PASSWORD',
+        'URL_PIXEL',
+        'VAT_ID',
+        'ID',
+        'BR_TRACKER_LOGIN_PUBLISHER_ID',
+        boolean_to_string('REPORT_REGISTRATION_ENABLED'),
+        'SCRAPER_STATUS',
+        'URL_API',
+        'BASELINE',
+        'CREATED_BY',
+        'REVSHARE_IN',
+        'PARENT_ID',
+        'NAME',
+        'UPDATED_BY',
+        'CONTACT_WECHAT',
+        boolean_to_string('REPORT_COMMISSION_ENABLED'),
+        'STATUS',
+        'CONTACT_SKYPE',
+        'REVSHARE_OUT',
+        'SECURITY_QUESTION_ANSWER',
+        'TIMEZONE',
+        'CREATED_AT',
+        'INVOICING_DETAILS',
+        'CONTACT_TELEGRAM',
+        'CONTACT_EMAIL',
+        'DATA_STRUCTURE',
+        'UPDATED_AT',
+        'MANAGER_ID',
+        'URL_POSTBACK',
+        'EMAIL',
+        'CONTACT_NAME',
+        boolean_to_string('API_ENABLED'),
+        'URL_LOGIN',
+        boolean_to_string('REPORT_EARNINGS_ENABLED'),
+        'API_STATUS',
+        'IN_HOUSE_ACCOUNT_TYPE',
+        'IS_REVIEWED',
+        'ACCOUNT_ID',
+        'API_KEY',
+        'BR_TRACKER_LOGIN_ADVERTISER_ID',
+        boolean_to_string('KEEPER_IMPORTED'),
+        'CPA_IN',
+        'IS_APPROVED',
+        'USERNAME',
+    ]) }} as _AIRBYTE_OPERATOR_ACCOUNTS_HASHID,
+    tmp.*
+from {{ ref('OPERATOR_ACCOUNTS_AB2') }} tmp
+-- OPERATOR_ACCOUNTS
+where 1 = 1
+

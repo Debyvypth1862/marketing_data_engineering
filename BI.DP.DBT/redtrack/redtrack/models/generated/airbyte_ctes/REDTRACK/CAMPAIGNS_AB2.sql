@@ -1,0 +1,65 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "REDTRACK",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to try_cast each column to its adequate SQL type converted from the JSON schema type
+-- depends_on: {{ ref('CAMPAIGNS_AB1') }}
+select
+    try_cast(CACHE_BUSTER_ENABLED as {{ dbt_utils.type_string() }}) as CACHE_BUSTER_ENABLED,
+    try_cast(COST_MODEL as {{ dbt_utils.type_string() }}) as COST_MODEL,
+    try_cast(COUPON as {{ dbt_utils.type_string() }}) as COUPON,
+    try_cast(CPC as {{ dbt_utils.type_string() }}) as CPC,
+    try_cast(CREATED_AT as {{ dbt_utils.type_string() }}) as CREATED_AT,
+    try_cast(CREATIVES as {{ dbt_utils.type_string() }}) as CREATIVES,
+    try_cast(CUSTOM_CONV_TYPE_CONV_SUBS_GEO_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_CONV_TYPE_CONV_SUBS_GEO_PAYOUTS,
+    try_cast(CUSTOM_CONV_TYPE_CONV_SUBS_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_CONV_TYPE_CONV_SUBS_PAYOUTS,
+    try_cast(CUSTOM_CONVERSION_SUBS_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_CONVERSION_SUBS_PAYOUTS,
+    try_cast(CUSTOM_CONVERSION_TYPE_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_CONVERSION_TYPE_PAYOUTS,
+    try_cast(CUSTOM_GEO_OS_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_GEO_OS_PAYOUTS,
+    try_cast(CUSTOM_GEO_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_GEO_PAYOUTS,
+    try_cast(CUSTOM_PUB_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_PUB_PAYOUTS,
+    try_cast(CUSTOM_PUB_SUB_GEO_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_PUB_SUB_GEO_PAYOUTS,
+    try_cast(CUSTOM_PUB_SUB_PAYOUTS as {{ dbt_utils.type_string() }}) as CUSTOM_PUB_SUB_PAYOUTS,
+    try_cast(CUSTOM_PUB_SUB_THROTTLES as {{ dbt_utils.type_string() }}) as CUSTOM_PUB_SUB_THROTTLES,
+    try_cast(CUSTOM_PUB_THROTTLES as {{ dbt_utils.type_string() }}) as CUSTOM_PUB_THROTTLES,
+    try_cast(CUSTOM_THROTTLES as {{ dbt_utils.type_string() }}) as CUSTOM_THROTTLES,
+    try_cast(DOMAIN_ID as {{ dbt_utils.type_string() }}) as DOMAIN_ID,
+    try_cast(EXPIRES_AT as {{ dbt_utils.type_string() }}) as EXPIRES_AT,
+    try_cast(ID as {{ dbt_utils.type_string() }}) as ID,
+    try_cast(IMPRESSION_POSTBACKS as {{ dbt_utils.type_string() }}) as IMPRESSION_POSTBACKS,
+    try_cast(IMPRESSION_URL as {{ dbt_utils.type_string() }}) as IMPRESSION_URL,
+    try_cast(INTEGRATION_POSTBACK as {{ dbt_utils.type_string() }}) as INTEGRATION_POSTBACK,
+    try_cast(INTEGRATIONS as {{ dbt_utils.type_string() }}) as INTEGRATIONS,
+    try_cast(NOTES as {{ dbt_utils.type_string() }}) as NOTES,
+    try_cast(NOTIFICATIONS as {{ dbt_utils.type_string() }}) as NOTIFICATIONS,
+    try_cast(PIXELS as {{ dbt_utils.type_string() }}) as PIXELS,
+    try_cast(POSTBACK_URL as {{ dbt_utils.type_string() }}) as POSTBACK_URL,
+    try_cast(POSTBACKS as {{ dbt_utils.type_string() }}) as POSTBACKS,
+    try_cast(PUBLISHER_DETAILS as {{ dbt_utils.type_string() }}) as PUBLISHER_DETAILS,
+    try_cast(REDIRECT_TYPE as {{ dbt_utils.type_string() }}) as REDIRECT_TYPE,
+    try_cast(REV_SHARE as {{ dbt_utils.type_string() }}) as REV_SHARE,
+    try_cast(SERIAL_NUMBER as {{ dbt_utils.type_string() }}) as SERIAL_NUMBER,
+    try_cast(SOURCE_CAMPAIGN_ID as {{ dbt_utils.type_string() }}) as SOURCE_CAMPAIGN_ID,
+    try_cast(SOURCE_CAMPAIGNS as {{ dbt_utils.type_string() }}) as SOURCE_CAMPAIGNS,
+    try_cast(SOURCE_ID as {{ dbt_utils.type_string() }}) as SOURCE_ID,
+    try_cast(SOURCE_TITLE as {{ dbt_utils.type_string() }}) as SOURCE_TITLE,
+    try_cast(STAT as {{ dbt_utils.type_string() }}) as STAT,
+    try_cast(STATUS as {{ dbt_utils.type_string() }}) as STATUS,
+    try_cast(STREAMS as {{ dbt_utils.type_string() }}) as STREAMS,
+    try_cast(TAGS as {{ dbt_utils.type_string() }}) as TAGS,
+    try_cast(TITLE as {{ dbt_utils.type_string() }}) as TITLE,
+    try_cast(TRACKBACK_URL as {{ dbt_utils.type_string() }}) as TRACKBACK_URL,
+    try_cast(TYPE as {{ dbt_utils.type_string() }}) as TYPE,
+    try_cast(UPDATED_AT as {{ dbt_utils.type_string() }}) as UPDATED_AT,
+    try_cast(USER_ID as {{ dbt_utils.type_string() }}) as USER_ID,
+    _AIRBYTE_AB_ID,
+    S3_PATH,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('CAMPAIGNS_AB1') }}
+-- CAMPAIGNS
+where 1 = 1
+{{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+

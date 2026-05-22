@@ -1,0 +1,383 @@
+version: 2
+sources:
+- name: PUBLIC
+  database: "{{ env_var('snowflake_db_dbt') }}"
+  tables:
+    - name: S3_FILES_STATS
+- name: REDTRACK
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+  - name: _AIRBYTE_RAW_CONVERSIONS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/conversions/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: PROCESSED_DATE
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: _AIRBYTE_EMITTED_AT
+        data_type: TIMESTAMP_TZ(9)
+        expression: "CAST(GET($1, '_airbyte_emitted_at') AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_API_COSTS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/api_costs/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_API_POSTBACKS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/api_postbacks/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_CAMPAIGNS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/campaigns/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_CLICKS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/clicks/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_LANDERS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/landers/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_OFFER_SOURCES
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/offer_sources/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_OFFERS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/offers/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_S2S_POSTBACKS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/s2s_postbacks/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_TRAFFIC_CHANNELS
+    external:
+      location: "@STG.REDTRACK.S3_ESTG_REDTRACK_JSON_FF"
+      pattern: "(?i)(?=.*/redtrack/)(?=.*/traffic_channels/)^.*"
+      file_format: "STG.REDTRACK.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"

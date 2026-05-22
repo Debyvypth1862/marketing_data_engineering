@@ -1,0 +1,54 @@
+name: crypto_cashback
+version: '1.0'
+config-version: 2
+profile: crypto_cashback
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: ../dbt
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  crypto_cashback:
+    +materialized: table
+    generated:
+      airbyte_ctes:
+        +tags: airbyte_internal_cte
+        +materialized: ephemeral
+      airbyte_incremental:
+        +tags: incremental_tables
+        +materialized: incremental
+        +on_schema_change: sync_all_columns
+      airbyte_views:
+        +tags: airbyte_internal_views
+        +materialized: view
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - crypto_cashback
+  - dbt_utils
+vars:
+  models_to_source:
+    API_CRYPTO_CASHBACK_BRAND_AB1: EXP.PUBLIC.FACT_OFFER
+    API_CRYPTO_CASHBACK_BRAND_STG: EXP.PUBLIC.FACT_OFFER
+    API_CRYPTO_CASHBACK_BRAND: EXP.PUBLIC.FACT_OFFER
+    API_CRYPTO_CASHBACK_MEMBER_AB1: EXP.PUBLIC.FACT_OFFER
+    API_CRYPTO_CASHBACK_MEMBER_STG: EXP.PUBLIC.FACT_OFFER
+    API_CRYPTO_CASHBACK_MEMBER: EXP.PUBLIC.FACT_OFFER

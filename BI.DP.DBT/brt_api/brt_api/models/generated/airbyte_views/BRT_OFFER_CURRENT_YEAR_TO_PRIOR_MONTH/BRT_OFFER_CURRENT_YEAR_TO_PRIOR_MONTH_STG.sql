@@ -1,0 +1,65 @@
+{{ config(
+    materialized = "view",
+    database = env_var('INTM_DATABASE', 'INTM'),
+    schema = "BRT"
+) }}
+-- STG: Add hash for change detection
+WITH base AS (
+    SELECT
+        {{ dbt_utils.surrogate_key([
+            "DATE_RANGE",
+            "OFFER_ID",
+            "BASELINE_DEPOSIT",
+            "BASELINE_WAGER",
+            "CPA_IN",
+            "CPA_OUT",
+            "CPA_DIFF",
+            "CPL_IN",
+            "CPL_OUT",
+            "CPL_DIFF",
+            "REVSHARE_IN",
+            "REVSHARE_OUT",
+            "REVSHARE_DIFF",
+            "FROM_BRC",
+            "CLICK_CNT",
+            "FTD_CNT",
+            "SIGNUP_CNT",
+            "DEPOSIT_CNT",
+            "CPA_CNT",
+            "DEPOSIT_AMT",
+            "NET_REVENUE_AMT",
+            "CPA_INCOME_AMT",
+            "CPA_PAYOUT_AMT",
+            "CPA_REVENUE_AMT",
+            "CPA_INCOME_PER_CLICK",
+            "CPA_PAYOUT_PER_CLICK",
+            "CPA_REVENUE_PER_CLICK",
+            "CPL_INCOME_AMT",
+            "CPL_PAYOUT_AMT",
+            "CPL_REVENUE_AMT",
+            "CPL_INCOME_PER_CLICK",
+            "CPL_PAYOUT_PER_CLICK",
+            "CPL_REVENUE_PER_CLICK",
+            "REVSHARE_INCOME_AMT",
+            "REVSHARE_PAYOUT_AMT",
+            "REVSHARE_REVENUE_AMT",
+            "REVSHARE_INCOME_PER_CLICK",
+            "REVSHARE_PAYOUT_PER_CLICK",
+            "REVSHARE_REVENUE_PER_CLICK",
+            "TOTAL_INCOME_AMT",
+            "TOTAL_PAYOUT_AMT",
+            "TOTAL_REVENUE_AMT",
+            "TOTAL_INCOME_PER_CLICK",
+            "TOTAL_PAYOUT_PER_CLICK",
+            "TOTAL_REVENUE_PER_CLICK",
+            "CLICK_TO_SIGNUP",
+            "CLICK_TO_FTD",
+            "CLICK_TO_CPA",
+            "SIGNUP_TO_FTD",
+            "SIGNUP_TO_CPA"
+        ]) }} as _AIRBYTE_BRT_OFFER_CURRENT_YEAR_TO_PRIOR_MONTH_HASHID,
+        {{ current_timestamp() }} as _AIRBYTE_EMITTED_AT,
+        *
+    FROM {{ ref('BRT_OFFER_CURRENT_YEAR_TO_PRIOR_MONTH_AB1') }}
+)
+SELECT * FROM base

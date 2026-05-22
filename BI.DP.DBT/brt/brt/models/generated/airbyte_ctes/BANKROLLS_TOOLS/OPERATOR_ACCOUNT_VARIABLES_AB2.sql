@@ -1,0 +1,20 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to cast each column to its adequate SQL type converted from the JSON schema type
+-- depends_on: {{ ref('OPERATOR_ACCOUNT_VARIABLES_AB1') }}
+select
+    cast(ID as {{ dbt_utils.type_bigint() }}) as ID,
+    cast(VALUE as {{ dbt_utils.type_string() }}) as VALUE,
+    cast(KEY as {{ dbt_utils.type_string() }}) as KEY,
+    cast(OPERATOR_ACCOUNT_ID as {{ dbt_utils.type_bigint() }}) as OPERATOR_ACCOUNT_ID,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('OPERATOR_ACCOUNT_VARIABLES_AB1') }}
+-- OPERATOR_ACCOUNT_VARIABLES
+where 1 = 1
+

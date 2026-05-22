@@ -1,0 +1,7 @@
+.git
+.gitignore
+logs
+build
+venv
+**/dbt/dbt_utils
+**/env

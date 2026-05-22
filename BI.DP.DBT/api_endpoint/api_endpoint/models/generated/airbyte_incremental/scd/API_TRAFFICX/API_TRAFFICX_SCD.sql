@@ -1,0 +1,191 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_ACTIVE_ROW", "_AIRBYTE_UNIQUE_KEY_SCD", "_AIRBYTE_EMITTED_AT"],
+    unique_key = "_AIRBYTE_UNIQUE_KEY_SCD",
+    database = env_var('INTM_DATABASE', 'INTM'),
+    schema = "API_ENDPOINT",
+    full_refresh = false,
+    post_hook = ["
+                    {%
+                    set final_table_relation = adapter.get_relation(
+                            database=env_var('EXP_DATABASE', 'EXP'),
+                            schema='API_ENDPOINT',
+                            identifier='API_TRAFFICX'
+                        )
+                    %}
+                    {%
+                    if final_table_relation is not none and '_AIRBYTE_UNIQUE_KEY' in adapter.get_columns_in_relation(final_table_relation)|map(attribute='name')
+                    %}
+                    -- Delete records which are no longer active
+                    delete from {{ final_table_relation }} where {{ final_table_relation }}._AIRBYTE_UNIQUE_KEY in (
+                        select recent_records.unique_key
+                        from (
+                                select distinct _AIRBYTE_UNIQUE_KEY as unique_key
+                                from {{ this }}
+                                where 1=1 {{ incremental_clause('_AIRBYTE_NORMALIZED_AT', env_var('EXP_DATABASE', 'EXP') ~ '.PUBLIC.API_TRAFFICX') }}
+                            ) recent_records
+                            left join (
+                                select _AIRBYTE_UNIQUE_KEY as unique_key, count(_AIRBYTE_UNIQUE_KEY) as active_count
+                                from {{ this }}
+                                where _AIRBYTE_ACTIVE_ROW = 1 {{ incremental_clause('_AIRBYTE_NORMALIZED_AT', env_var('EXP_DATABASE', 'EXP') ~ '.PUBLIC.API_TRAFFICX') }}
+                                group by _AIRBYTE_UNIQUE_KEY
+                            ) active_counts
+                            on recent_records.unique_key = active_counts.unique_key
+                        where active_count is null or active_count = 0
+                    )
+                    {% else %}
+                    delete from {{ this }} where 1=0
+                    {% endif %}
+                    ",
+                    "drop view {{ env_var('INTM_DATABASE', 'INTM') }}.API_ENDPOINT.API_TRAFFICX_STG"],
+    tags = [ "top-level" ]
+) }}
+-- SCD Type 2 model for API_TRAFFICX
+-- depends_on: {{ ref('API_TRAFFICX_STG') }}
+with
+{% if is_incremental() %}
+new_data as (
+    -- retrieve incremental "new" data
+    select
+        *
+    from {{ ref('API_TRAFFICX_STG')  }}
+    where 1 = 1
+    {{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+),
+new_data_ids as (
+    -- build a subset of _AIRBYTE_UNIQUE_KEY from rows that are new
+    select distinct
+        {{ dbt_utils.surrogate_key([
+            'DATE',
+            'CLICKID',
+        ]) }} as _AIRBYTE_UNIQUE_KEY
+    from new_data
+),
+empty_new_data as (
+    -- build an empty table to only keep the table's column types
+    select * from new_data where 1 = 0
+),
+previous_active_scd_data as (
+    -- retrieve "incomplete old" data that needs to be updated with an end date because of new changes
+    select
+        {{ star_intersect(ref('API_TRAFFICX_STG'), this, from_alias='inc_data', intersect_alias='this_data') }}
+    from {{ this }} as this_data
+    -- make a join with new_data using primary key to filter active data that need to be updated only
+    join new_data_ids on this_data._AIRBYTE_UNIQUE_KEY = new_data_ids._AIRBYTE_UNIQUE_KEY
+    -- force left join to NULL values (we just need to transfer column types only for the star_intersect macro on schema changes)
+    left join empty_new_data as inc_data on this_data._AIRBYTE_AB_ID = inc_data._AIRBYTE_AB_ID
+    where _AIRBYTE_ACTIVE_ROW = 1
+),
+input_data as (
+    select {{ dbt_utils.star(ref('API_TRAFFICX_STG')) }} from new_data
+    union all
+    select {{ dbt_utils.star(ref('API_TRAFFICX_STG')) }} from previous_active_scd_data
+),
+{% else %}
+input_data as (
+    select *
+    from {{ ref('API_TRAFFICX_STG')  }}
+),
+{% endif %}
+scd_data as (
+    -- SQL model to build a Type 2 Slowly Changing Dimension (SCD) table for each record identified by their primary key
+    select
+      {{ dbt_utils.surrogate_key([
+      'DATE',
+      'CLICKID',
+      ]) }} as _AIRBYTE_UNIQUE_KEY,
+      DATE,
+      COUNTRY,
+      PUBLISHER,
+      ADVERTISER_ID,
+      ADVERTISER_NAME,
+      BRAND_NAME,
+      CAMPAIGN_NAME,
+      SUBID,
+      SUBID2,
+      SUBID3,
+      SUBID4,
+      SUBID5,
+      "3RD_PARTY_CLICKID",
+      CLICKID,
+      CLICK_CNT,
+      SIGNUP_CNT,
+      FTD_CNT,
+      FTD_AMT,
+      CPA_CNT,
+      DEPOSIT_CNT,
+      DEPOSIT_AMT,
+      NET_REVENUE_AMT,
+      REVSHARE_REVENUE_AMT,
+      _AIRBYTE_EMITTED_AT as _AIRBYTE_START_AT,
+      lag(_AIRBYTE_EMITTED_AT) over (
+        partition by DATE, CLICKID
+        order by
+            DATE is null asc,
+            DATE desc,
+            _AIRBYTE_EMITTED_AT desc
+      ) as _AIRBYTE_END_AT,
+      case when row_number() over (
+        partition by DATE, CLICKID
+        order by
+            DATE is null asc,
+            DATE desc,
+            _AIRBYTE_EMITTED_AT desc
+      ) = 1 then 1 else 0 end as _AIRBYTE_ACTIVE_ROW,
+      _AIRBYTE_AB_ID,
+      _AIRBYTE_EMITTED_AT,
+      _AIRBYTE_API_TRAFFICX_HASHID
+    from input_data
+),
+dedup_data as (
+    select
+        -- we need to ensure de-duplicated rows for merge/update queries
+        -- additionally, we generate a unique key for the scd table
+        row_number() over (
+            partition by
+                _AIRBYTE_UNIQUE_KEY,
+                _AIRBYTE_START_AT,
+                _AIRBYTE_EMITTED_AT
+            order by _AIRBYTE_ACTIVE_ROW desc, _AIRBYTE_AB_ID
+        ) as _AIRBYTE_ROW_NUM,
+        {{ dbt_utils.surrogate_key([
+          '_AIRBYTE_UNIQUE_KEY',
+          '_AIRBYTE_START_AT',
+          '_AIRBYTE_EMITTED_AT'
+        ]) }} as _AIRBYTE_UNIQUE_KEY_SCD,
+        scd_data.*
+    from scd_data
+)
+select
+    _AIRBYTE_UNIQUE_KEY,
+    _AIRBYTE_UNIQUE_KEY_SCD,
+    DATE,
+    COUNTRY,
+    PUBLISHER,
+    ADVERTISER_ID,
+    ADVERTISER_NAME,
+    BRAND_NAME,
+    CAMPAIGN_NAME,
+    SUBID,
+    SUBID2,
+    SUBID3,
+    SUBID4,
+    SUBID5,
+    "3RD_PARTY_CLICKID",
+    CLICKID,
+    CLICK_CNT,
+    SIGNUP_CNT,
+    FTD_CNT,
+    FTD_AMT,
+    CPA_CNT,
+    DEPOSIT_CNT,
+    DEPOSIT_AMT,
+    NET_REVENUE_AMT,
+    REVSHARE_REVENUE_AMT,
+    _AIRBYTE_START_AT,
+    _AIRBYTE_END_AT,
+    _AIRBYTE_ACTIVE_ROW,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT,
+    _AIRBYTE_API_TRAFFICX_HASHID
+from dedup_data where _AIRBYTE_ROW_NUM = 1

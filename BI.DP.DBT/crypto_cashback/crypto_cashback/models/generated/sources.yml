@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: BRC
+    database: RAW
+    schema: BRC
+    tables:
+      - name: POSTBACK_TRACKING
+
+  - name: BRT
+    database: RAW
+    schema: BRT
+    tables:
+      - name: CURRENCIES
+      - name: OPERATOR_ACCOUNTS
+      - name: OFFERS
+      - name: CURRENCY_OPERATOR_ACCOUNT
+
+  - name: EXP_PUBLIC
+    database: EXP
+    schema: PUBLIC
+    tables:
+      - name: FACT_OFFER

@@ -1,0 +1,14 @@
+
+[
+  {
+    "type": "STREAM",
+    "stream": {
+      "stream_descriptor": {
+        "name": "dynamic_variables_report_stream"
+      },
+      "stream_state": {
+        "date": "2025-06-25"
+      }
+    }
+  }
+]

@@ -1,0 +1,228 @@
+{{ config(
+    cluster_by = ["DATE","OPERATOR_PLATFORM", "PUBLISHER_NAME","TRACKER_LOGIN_ID"],
+    unique_key = "_AIRBYTE_UNIQUE_KEY",
+    database = "EXP",
+    schema = "PUBLIC",
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+WITH Summary_temp AS (
+  SELECT
+    DATE
+    , SIGNUP_DATE
+    , FTD_DATE
+    , FTD_DATE_AGG
+    , COUNTRY
+    , PUBLISHER_NAME
+    , ADVERTISER_ID
+    , ADVERTISER_NAME
+    , BRAND_NAME
+    , PLAYER_IPADDRESS
+    , CLICKID
+    , CLICK_CNT
+    , SIGNUP_CNT
+    , FTD_CNT
+    , FTD_AMT
+    , WITHDRAWAL_AMT
+    , COMMISSION_AMT
+    , DEPOSIT_CNT
+    , DEPOSIT_AMT
+    , NET_DEPOSIT_AMT
+    , NET_REVENUE_AMT
+    , TRACKER_LOGIN_ID
+    , TRACKER_USERNAME
+    , OPERATOR_PLATFORM
+    , SOURCE_CURRENCY
+    , {{ current_timestamp() }} AS _AIRBYTE_NORMALIZED_AT
+    , _AIRBYTE_EMITTED_AT
+  FROM (
+
+    SELECT * FROM {{ ref('CELLXPERT_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('NETREFER_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('REFERON_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('SOFTSWISS_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('MYAFFILIATES_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('MEXOS_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('EGO_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('Q_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('SMARTICO_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('INCOME_ACCESS_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('BUFFALO_PARTNER_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('AFFTECH_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('7StarPartner_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('PLAYAMO_STG') }}
+    UNION ALL
+    SELECT * FROM {{ ref('LEOVEGAS_STG') }}
+  )
+  WHERE CLICKID != '[[oid]]' and CLICKID is not null
+  {{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+)
+,
+MAX_CURRENCY_OPERATOR_ACCOUNT AS (
+  SELECT a.* FROM
+    {{ source('BRT', 'CURRENCY_OPERATOR_ACCOUNT') }} AS a
+  INNER JOIN
+    (
+      SELECT
+        OPERATOR_ACCOUNT_ID
+        , MAX(_AIRBYTE_EMITTED_AT) AS _AIRBYTE_EMITTED_AT
+      FROM
+        {{ source('BRT', 'CURRENCY_OPERATOR_ACCOUNT') }}
+      GROUP BY 1
+    ) AS b
+    ON a.OPERATOR_ACCOUNT_ID = b.OPERATOR_ACCOUNT_ID AND a._AIRBYTE_EMITTED_AT = b._AIRBYTE_EMITTED_AT
+)
+
+, Summary AS (
+  SELECT
+    fo._AIRBYTE_NORMALIZED_AT
+    , opa.ID AS Operator_Account
+    , opa.Name AS Operator_Name
+    , fo.TRACKER_LOGIN_ID
+    , fo.TRACKER_USERNAME
+    , UPPER(c.abbrev) AS Affiliate_Currency
+    , fo.DATE
+    , fo.FTD_DATE
+    , fo.FTD_DATE_AGG
+    , fo.SIGNUP_DATE
+    , fo.BRAND_NAME
+    , fo.PLAYER_IPADDRESS
+    , fo.CLICKID
+    , fo.CLICK_CNT
+    , fo.DEPOSIT_AMT
+    , fo.FTD_AMT
+    , fo.NET_DEPOSIT_AMT
+    , fo.NET_REVENUE_AMT
+    , fo.SIGNUP_CNT
+    , fo.FTD_CNT
+    , fo.WITHDRAWAL_AMT
+    , fo.COMMISSION_AMT
+    , fo.COUNTRY
+    , fo.ADVERTISER_ID
+    , fo.ADVERTISER_NAME
+    , fo.PUBLISHER_NAME
+    , fo.OPERATOR_PLATFORM
+    , fo.SOURCE_CURRENCY
+    , fo._AIRBYTE_EMITTED_AT
+  FROM Summary_Temp AS fo
+  LEFT OUTER JOIN {{ source('BRT', 'OPERATOR_ACCOUNTS') }} AS opa
+    ON fo.TRACKER_LOGIN_ID = opa.BR_TRACKER_LOGIN_ID
+  LEFT OUTER JOIN MAX_CURRENCY_OPERATOR_ACCOUNT AS coa
+    ON TO_NUMBER(opa.ID) = TO_NUMBER(coa.OPERATOR_ACCOUNT_ID)
+  LEFT OUTER JOIN {{ source('BRT', 'CURRENCIES') }} AS c
+    ON TO_NUMBER(coa.CURRENCY_ID) = TO_NUMBER(c.ID)
+  GROUP BY ALL
+)
+
+, CurrencyRate AS (
+  SELECT
+    TO_DATE(DATE) AS DATE
+    , CURRENCY_SOURCE
+    , RATE AS EURO_CONV_RATE
+  FROM {{ ref('TO_EUR_HISTORICAL') }}
+  WHERE CURRENCY_SOURCE IN (SELECT DISTINCT Affiliate_Currency FROM Summary)
+)
+
+SELECT
+  {{ dbt_utils.surrogate_key(
+        ['OPERATOR_PLATFORM',
+        'DATE',
+        'CLICKID',
+        'TRACKER_LOGIN_ID',
+        'SIGNUP_DATE',
+        'FTD_DATE'
+        ]) }} AS _AIRBYTE_UNIQUE_KEY
+  , DATE
+  , SIGNUP_DATE
+  , FTD_DATE
+  , FTD_DATE_AGG
+  , COUNTRY
+  , PUBLISHER_NAME
+  , ADVERTISER_ID
+  , ADVERTISER_NAME
+  , BRAND_NAME
+  , PLAYER_IPADDRESS
+  , CLICKID
+  , CLICK_CNT
+  , DEPOSIT_AMT
+  , FTD_AMT
+  , NET_DEPOSIT_AMT
+  , NET_REVENUE_AMT
+  , SIGNUP_CNT
+  , FTD_CNT
+  , WITHDRAWAL_AMT
+  , COMMISSION_AMT
+  , EURO_CONV_RATE
+  , FTD_AMT_EUR
+  , WITHDRAWAL_AMT_EUR
+  , COMMISSION_AMT_EUR
+  , DEPOSIT_AMT_EUR
+  , NET_DEPOSIT_AMT_EUR
+  , NET_REVENUE_AMT_EUR
+  , Affiliate_Currency
+  , TRACKER_LOGIN_ID
+  , TRACKER_USERNAME
+  , Operator_Account
+  , Operator_Name
+  , OPERATOR_PLATFORM
+  , SOURCE_CURRENCY
+  , _AIRBYTE_NORMALIZED_AT
+  , _AIRBYTE_EMITTED_AT
+FROM (
+  SELECT
+    fo.DATE
+    , fo.SIGNUP_DATE
+    , fo.FTD_DATE
+    , max(fo.FTD_DATE_AGG) as FTD_DATE_AGG
+    , fo.COUNTRY
+    , fo.PUBLISHER_NAME
+    , fo.ADVERTISER_ID
+    , fo.ADVERTISER_NAME
+    , fo.BRAND_NAME
+    , fo.PLAYER_IPADDRESS
+    , fo.CLICKID
+    , fo.CLICK_CNT
+    , sum(fo.DEPOSIT_AMT) as DEPOSIT_AMT,
+    sum(fo.FTD_AMT) as FTD_AMT,
+    sum(fo.NET_DEPOSIT_AMT) as NET_DEPOSIT_AMT,
+    sum(fo.NET_REVENUE_AMT) as NET_REVENUE_AMT,
+    sum(fo.SIGNUP_CNT) as SIGNUP_CNT,
+    sum(fo.FTD_CNT) as FTD_CNT,
+    sum(fo.WITHDRAWAL_AMT) as WITHDRAWAL_AMT,
+    sum(fo.COMMISSION_AMT) as COMMISSION_AMT
+    , CASE WHEN fo.Affiliate_Currency = 'EUR' THEN 1 ELSE cur.EURO_CONV_RATE END AS EURO_CONV_RATE
+    , sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN FTD_AMT ELSE ROUND(FTD_AMT*cur.EURO_CONV_RATE,2) END) AS FTD_AMT_EUR,
+    sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN WITHDRAWAL_AMT ELSE ROUND(WITHDRAWAL_AMT*cur.EURO_CONV_RATE,2) END) AS WITHDRAWAL_AMT_EUR,
+    sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN COMMISSION_AMT ELSE ROUND(COMMISSION_AMT*cur.EURO_CONV_RATE,2) END) AS COMMISSION_AMT_EUR,
+    sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN DEPOSIT_AMT ELSE ROUND(DEPOSIT_AMT*cur.EURO_CONV_RATE,2) END) AS DEPOSIT_AMT_EUR,
+    sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN NET_DEPOSIT_AMT ELSE ROUND(NET_DEPOSIT_AMT*cur.EURO_CONV_RATE,2) END) AS NET_DEPOSIT_AMT_EUR,
+    sum(CASE WHEN fo.Affiliate_Currency =  'EUR' THEN NET_REVENUE_AMT ELSE ROUND(NET_REVENUE_AMT*cur.EURO_CONV_RATE,2) END) AS NET_REVENUE_AMT_EUR
+    , fo.Affiliate_Currency
+    , fo.TRACKER_LOGIN_ID
+    , fo.TRACKER_USERNAME
+    , fo.Operator_Account
+    , fo.Operator_Name
+    , fo.OPERATOR_PLATFORM
+    , fo.SOURCE_CURRENCY
+    , fo._AIRBYTE_NORMALIZED_AT
+    , fo._AIRBYTE_EMITTED_AT
+  FROM Summary AS fo
+  LEFT OUTER JOIN CurrencyRate AS cur
+    ON UPPER(fo.Affiliate_Currency) = UPPER(cur.CURRENCY_SOURCE) AND (TO_DATE(fo.DATE) = TO_DATE(cur.DATE))
+  WHERE 1 = 1
+  GROUP BY ALL
+)
+WHERE 1 = 1

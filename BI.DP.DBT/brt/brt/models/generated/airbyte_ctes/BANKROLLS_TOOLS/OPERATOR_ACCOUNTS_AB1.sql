@@ -1,0 +1,70 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    tags = [ "top-level-intermediate" ]
+) }}
+
+
+-- SQL model to parse JSON blob stored in a single column and extract into separated field columns as described by the JSON Schema
+-- depends_on: {{ source('BRT', '_AIRBYTE_RAW_OPERATOR_ACCOUNTS') }}
+select
+    {{ json_extract_scalar('_airbyte_data', ['report_activity_enabled'], ['report_activity_enabled']) }} as REPORT_ACTIVITY_ENABLED,
+    {{ json_extract_scalar('_airbyte_data', ['notes'], ['notes']) }} as NOTES,
+    {{ json_extract_scalar('_airbyte_data', ['contact_phone'], ['contact_phone']) }} as CONTACT_PHONE,
+    {{ json_extract_scalar('_airbyte_data', ['operator_id'], ['operator_id']) }} as OPERATOR_ID,
+    {{ json_extract_scalar('_airbyte_data', ['br_tracker_login_id'], ['br_tracker_login_id']) }} as BR_TRACKER_LOGIN_ID,
+    {{ json_extract_scalar('_airbyte_data', ['cpa_out'], ['cpa_out']) }} as CPA_OUT,
+    {{ json_extract_scalar('_airbyte_data', ['is_parent'], ['is_parent']) }} as IS_PARENT,
+    {{ json_extract_scalar('_airbyte_data', ['password'], ['password']) }} as PASSWORD,
+    {{ json_extract_scalar('_airbyte_data', ['url_pixel'], ['url_pixel']) }} as URL_PIXEL,
+    {{ json_extract_scalar('_airbyte_data', ['vat_id'], ['vat_id']) }} as VAT_ID,
+    {{ json_extract_scalar('_airbyte_data', ['id'], ['id']) }} as ID,
+    {{ json_extract_scalar('_airbyte_data', ['br_tracker_login_publisher_id'], ['br_tracker_login_publisher_id']) }} as BR_TRACKER_LOGIN_PUBLISHER_ID,
+    {{ json_extract_scalar('_airbyte_data', ['report_registration_enabled'], ['report_registration_enabled']) }} as REPORT_REGISTRATION_ENABLED,
+    {{ json_extract_scalar('_airbyte_data', ['scraper_status'], ['scraper_status']) }} as SCRAPER_STATUS,
+    {{ json_extract_scalar('_airbyte_data', ['url_api'], ['url_api']) }} as URL_API,
+    {{ json_extract_scalar('_airbyte_data', ['baseline'], ['baseline']) }} as BASELINE,
+    {{ json_extract_scalar('_airbyte_data', ['created_by'], ['created_by']) }} as CREATED_BY,
+    {{ json_extract_scalar('_airbyte_data', ['revshare_in'], ['revshare_in']) }} as REVSHARE_IN,
+    {{ json_extract_scalar('_airbyte_data', ['parent_id'], ['parent_id']) }} as PARENT_ID,
+    {{ json_extract_scalar('_airbyte_data', ['name'], ['name']) }} as NAME,
+    {{ json_extract_scalar('_airbyte_data', ['updated_by'], ['updated_by']) }} as UPDATED_BY,
+    {{ json_extract_scalar('_airbyte_data', ['contact_wechat'], ['contact_wechat']) }} as CONTACT_WECHAT,
+    {{ json_extract_scalar('_airbyte_data', ['report_commission_enabled'], ['report_commission_enabled']) }} as REPORT_COMMISSION_ENABLED,
+    {{ json_extract_scalar('_airbyte_data', ['status'], ['status']) }} as STATUS,
+    {{ json_extract_scalar('_airbyte_data', ['contact_skype'], ['contact_skype']) }} as CONTACT_SKYPE,
+    {{ json_extract_scalar('_airbyte_data', ['revshare_out'], ['revshare_out']) }} as REVSHARE_OUT,
+    {{ json_extract_scalar('_airbyte_data', ['security_question_answer'], ['security_question_answer']) }} as SECURITY_QUESTION_ANSWER,
+    {{ json_extract_scalar('_airbyte_data', ['timezone'], ['timezone']) }} as TIMEZONE,
+    {{ json_extract_scalar('_airbyte_data', ['created_at'], ['created_at']) }} as CREATED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['invoicing_details'], ['invoicing_details']) }} as INVOICING_DETAILS,
+    {{ json_extract_scalar('_airbyte_data', ['contact_telegram'], ['contact_telegram']) }} as CONTACT_TELEGRAM,
+    {{ json_extract_scalar('_airbyte_data', ['contact_email'], ['contact_email']) }} as CONTACT_EMAIL,
+    {{ json_extract_scalar('_airbyte_data', ['data_structure'], ['data_structure']) }} as DATA_STRUCTURE,
+    {{ json_extract_scalar('_airbyte_data', ['updated_at'], ['updated_at']) }} as UPDATED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['manager_id'], ['manager_id']) }} as MANAGER_ID,
+    {{ json_extract_scalar('_airbyte_data', ['url_postback'], ['url_postback']) }} as URL_POSTBACK,
+    {{ json_extract_scalar('_airbyte_data', ['email'], ['email']) }} as EMAIL,
+    {{ json_extract_scalar('_airbyte_data', ['contact_name'], ['contact_name']) }} as CONTACT_NAME,
+    {{ json_extract_scalar('_airbyte_data', ['api_enabled'], ['api_enabled']) }} as API_ENABLED,
+    {{ json_extract_scalar('_airbyte_data', ['url_login'], ['url_login']) }} as URL_LOGIN,
+    {{ json_extract_scalar('_airbyte_data', ['report_earnings_enabled'], ['report_earnings_enabled']) }} as REPORT_EARNINGS_ENABLED,
+    {{ json_extract_scalar('_airbyte_data', ['api_status'], ['api_status']) }} as API_STATUS,
+    {{ json_extract_scalar('_airbyte_data', ['in_house_account_type'], ['in_house_account_type']) }} as IN_HOUSE_ACCOUNT_TYPE,
+    {{ json_extract_scalar('_airbyte_data', ['is_reviewed'], ['is_reviewed']) }} as IS_REVIEWED,
+    {{ json_extract_scalar('_airbyte_data', ['account_id'], ['account_id']) }} as ACCOUNT_ID,
+    {{ json_extract_scalar('_airbyte_data', ['api_key'], ['api_key']) }} as API_KEY,
+    {{ json_extract_scalar('_airbyte_data', ['br_tracker_login_advertiser_id'], ['br_tracker_login_advertiser_id']) }} as BR_TRACKER_LOGIN_ADVERTISER_ID,
+    {{ json_extract_scalar('_airbyte_data', ['keeper_imported'], ['keeper_imported']) }} as KEEPER_IMPORTED,
+    {{ json_extract_scalar('_airbyte_data', ['cpa_in'], ['cpa_in']) }} as CPA_IN,
+    {{ json_extract_scalar('_airbyte_data', ['is_approved'], ['is_approved']) }} as IS_APPROVED,
+    {{ json_extract_scalar('_airbyte_data', ['username'], ['username']) }} as USERNAME,
+    {{ json_extract_scalar('_airbyte_data', ['admin_fee'], ['admin_fee']) }} as ADMIN_FEE,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ source('BRT', '_AIRBYTE_RAW_OPERATOR_ACCOUNTS') }} as table_alias
+-- OPERATOR_ACCOUNTS
+where 1 = 1
+

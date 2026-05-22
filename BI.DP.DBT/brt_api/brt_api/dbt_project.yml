@@ -1,0 +1,54 @@
+name: brt_api
+version: '1.0'
+config-version: 2
+profile: brt_api
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: "{{ env_var('DBT_PACKAGES_INSTALL_PATH', '../dbt') }}"
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  brt_api:
+    +materialized: table
+    generated:
+      airbyte_ctes:
+        +tags: airbyte_internal_cte
+        +materialized: ephemeral
+      airbyte_incremental:
+        +tags: incremental_tables
+        +materialized: incremental
+        +on_schema_change: sync_all_columns
+      airbyte_views:
+        +tags: airbyte_internal_views
+        +materialized: view
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - brt_api
+  - dbt_utils
+vars:
+  models_to_source:
+    BRT_OFFER_ALL_AB1: EXP.PUBLIC.BRT_OFFER_ALL
+    BRT_OFFER_ALL_STG: EXP.PUBLIC.BRT_OFFER_ALL
+    BRT_OFFER_ALL: EXP.PUBLIC.BRT_OFFER_ALL
+    BRT_PARENT_ALL_AB1: EXP.PUBLIC.BRT_PARENT_ALL
+    BRT_PARENT_ALL_STG: EXP.PUBLIC.BRT_PARENT_ALL
+    BRT_PARENT_ALL: EXP.PUBLIC.BRT_PARENT_ALL

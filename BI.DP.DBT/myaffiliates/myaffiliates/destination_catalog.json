@@ -1,0 +1,128 @@
+{
+    "streams": [
+        {
+            "stream": {
+                "name": "activity_report",
+                "json_schema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        },
+                        "Deposits": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Withdrawals": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "afp": {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        },
+                        "Net_Deposits": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "userId": {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        },
+                        "Commissions": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Brand": {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        },
+                        "Volume": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Deposit_Count": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Commission_Count": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Position_Count": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "PL": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        },
+                        "Tracking_Code": {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        },
+                        "Tracker_Login_Id": {
+                            "type": [
+                                "null",
+                                "number"
+                            ]
+                        }
+                    }
+                },
+                "supported_sync_modes": [
+                    "full_refresh",
+                    "incremental"
+                ],
+                "source_defined_cursor": true,
+                "default_cursor_field": [
+                    "date"
+                ],
+                "source_defined_primary_key": [],
+                "namespace": "MYAFFILIATES"
+            },
+            "sync_mode": "incremental",
+            "cursor_field": [
+                "date"
+            ],
+            "destination_sync_mode": "append_dedup",
+            "primary_key": [
+                [
+                    "date"
+                ],
+                [
+                    "userId"
+                ]
+            ]
+        }
+    ]
+}

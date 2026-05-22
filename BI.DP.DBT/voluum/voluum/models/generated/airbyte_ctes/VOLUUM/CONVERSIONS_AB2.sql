@@ -1,0 +1,86 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "VOLUUM",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to try_cast each column to its adequate SQL type converted from the JSON schema type
+-- depends_on: {{ ref('CONVERSIONS_AB1') }}
+select
+    try_cast(ALL_CONVERSIONS_REVENUE as {{ dbt_utils.type_float() }}) as ALL_CONVERSIONS_REVENUE,
+    try_cast(AFFILIATE_NETWORK_ID as {{ dbt_utils.type_string() }}) as AFFILIATE_NETWORK_ID,
+    try_cast(AFFILIATE_NETWORK_NAME as {{ dbt_utils.type_string() }}) as AFFILIATE_NETWORK_NAME,
+    try_cast(BRAND as {{ dbt_utils.type_string() }}) as BRAND,
+    try_cast(BROWSER as {{ dbt_utils.type_string() }}) as BROWSER,
+    try_cast(BROWSER_VERSION as {{ dbt_utils.type_string() }}) as BROWSER_VERSION,
+    try_cast(CAMPAIGN_ID as {{ dbt_utils.type_string() }}) as CAMPAIGN_ID,
+    try_cast(CAMPAIGN_NAME as {{ dbt_utils.type_string() }}) as CAMPAIGN_NAME,
+    try_cast(CAMPAIGN_URL_CONFIGURED as {{ dbt_utils.type_string() }}) as CAMPAIGN_URL_CONFIGURED,
+    try_cast(CITY as {{ dbt_utils.type_string() }}) as CITY,
+    try_cast(CLICKID as {{ dbt_utils.type_string() }}) as CLICKID,
+    try_cast(CONNECTION_TYPE as {{ dbt_utils.type_string() }}) as CONNECTION_TYPE,
+    try_cast(CONNECTION_TYPE_NAME as {{ dbt_utils.type_string() }}) as CONNECTION_TYPE_NAME,
+    try_cast(CONVERSION_ORIGINAL_CURRENCY as {{ dbt_utils.type_string() }}) as CONVERSION_ORIGINAL_CURRENCY,
+    try_cast(CONVERSION_TYPE as {{ dbt_utils.type_string() }}) as CONVERSION_TYPE,
+    try_cast(CONVERSION_TYPE_ID as {{ dbt_utils.type_float() }}) as CONVERSION_TYPE_ID,
+    try_cast(COST as {{ dbt_utils.type_float() }}) as COST,
+    try_cast(COST_SOURCES as {{ dbt_utils.type_float() }}) as COST_SOURCES,
+    try_cast(COUNTRY_CODE as {{ dbt_utils.type_string() }}) as COUNTRY_CODE,
+    try_cast(COUNTRY_NAME as {{ dbt_utils.type_string() }}) as COUNTRY_NAME,
+    try_cast(CUSTOM_VARIABLE_1 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_1,
+    try_cast(CUSTOM_VARIABLE_10 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_10,
+    try_cast(CUSTOM_VARIABLE_2 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_2,
+    try_cast(CUSTOM_VARIABLE_3 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_3,
+    try_cast(CUSTOM_VARIABLE_4 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_4,
+    try_cast(CUSTOM_VARIABLE_5 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_5,
+    try_cast(CUSTOM_VARIABLE_6 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_6,
+    try_cast(CUSTOM_VARIABLE_7 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_7,
+    try_cast(CUSTOM_VARIABLE_8 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_8,
+    try_cast(CUSTOM_VARIABLE_9 as {{ dbt_utils.type_string() }}) as CUSTOM_VARIABLE_9,
+    try_cast(DEVICE as {{ dbt_utils.type_string() }}) as DEVICE,
+    try_cast(DEVICE_NAME as {{ dbt_utils.type_string() }}) as DEVICE_NAME,
+    try_cast(EXTERNAL_ID as {{ dbt_utils.type_string() }}) as EXTERNAL_ID,
+    try_cast(FLOW_ID as {{ dbt_utils.type_string() }}) as FLOW_ID,
+    try_cast(IP as {{ dbt_utils.type_string() }}) as IP,
+    try_cast(IS_DSP as {{ dbt_utils.type_string() }}) as IS_DSP,
+    try_cast(ISP as {{ dbt_utils.type_string() }}) as ISP,
+    try_cast(LANDER_ID as {{ dbt_utils.type_string() }}) as LANDER_ID,
+    try_cast(LANDER_NAME as {{ dbt_utils.type_string() }}) as LANDER_NAME,
+    try_cast(MOBILE_CARRIER as {{ dbt_utils.type_string() }}) as MOBILE_CARRIER,
+    try_cast(MODEL as {{ dbt_utils.type_string() }}) as MODEL,
+    try_cast(OFFER_ID as {{ dbt_utils.type_string() }}) as OFFER_ID,
+    try_cast(OFFER_NAME as {{ dbt_utils.type_string() }}) as OFFER_NAME,
+    try_cast(OS as {{ dbt_utils.type_string() }}) as OS,
+    try_cast(OS_VERSION as {{ dbt_utils.type_string() }}) as OS_VERSION,
+    try_cast(OUTGOING_POSTBACK_URL as {{ dbt_utils.type_string() }}) as OUTGOING_POSTBACK_URL,
+    try_cast(PATH_ID as {{ dbt_utils.type_string() }}) as PATH_ID,
+    try_cast(POSTBACK_PARAM_1 as {{ dbt_utils.type_string() }}) as POSTBACK_PARAM_1,
+    try_cast(POSTBACK_PARAM_2 as {{ dbt_utils.type_string() }}) as POSTBACK_PARAM_2,
+    try_cast(POSTBACK_PARAM_3 as {{ dbt_utils.type_string() }}) as POSTBACK_PARAM_3,
+    try_cast(POSTBACK_PARAM_4 as {{ dbt_utils.type_string() }}) as POSTBACK_PARAM_4,
+    try_cast(POSTBACK_PARAM_5 as {{ dbt_utils.type_string() }}) as POSTBACK_PARAM_5,
+    CASE WHEN _AIRBYTE_EMITTED_AT < '2023-10-05' THEN TO_VARCHAR(CONVERT_TIMEZONE('CET', 'America/Los_Angeles', TRY_TO_TIMESTAMP(POSTBACK_TIMESTAMP,'YYYY-MM-DD HH12:MI:SS AM')),'YYYY-MM-DD HH12:MI:SS AM') 
+    ELSE try_cast(POSTBACK_TIMESTAMP as {{ dbt_utils.type_string() }})
+    END  as POSTBACK_TIMESTAMP,
+    try_cast(REFERRER as {{ dbt_utils.type_string() }}) as REFERRER,
+    try_cast(REGION as {{ dbt_utils.type_string() }}) as REGION,
+    try_cast(REVENUE as {{ dbt_utils.type_float() }}) as REVENUE,
+    try_cast(REVENUE_IN_ORIGINAL_CURRENCY as {{ dbt_utils.type_float() }}) as REVENUE_IN_ORIGINAL_CURRENCY,
+    try_cast(SUB_LANDER_ID as {{ dbt_utils.type_string() }}) as SUB_LANDER_ID,
+    try_cast(TRAFFIC_SOURCE_ID as {{ dbt_utils.type_string() }}) as TRAFFIC_SOURCE_ID,
+    try_cast(TRAFFIC_SOURCE_NAME as {{ dbt_utils.type_string() }}) as TRAFFIC_SOURCE_NAME,
+    try_cast(TRANSACTION_ID as {{ dbt_utils.type_string() }}) as TRANSACTION_ID,
+    try_cast(TYPE as {{ dbt_utils.type_string() }}) as TYPE,
+    try_cast(USER_AGENT as {{ dbt_utils.type_string() }}) as USER_AGENT,
+    CASE WHEN _AIRBYTE_EMITTED_AT < '2023-10-05' THEN TO_VARCHAR(CONVERT_TIMEZONE('CET', 'America/Los_Angeles', TRY_TO_TIMESTAMP(VISIT_TIMESTAMP,'YYYY-MM-DD HH12:MI:SS AM')) ,'YYYY-MM-DD HH12:MI:SS AM') 
+    ELSE try_cast(VISIT_TIMESTAMP  as {{ dbt_utils.type_string() }})
+    END  as VISIT_TIMESTAMP ,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    S3_PATH,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('CONVERSIONS_AB1') }}
+-- CONVERSIONS
+where 1 = 1
+{{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+

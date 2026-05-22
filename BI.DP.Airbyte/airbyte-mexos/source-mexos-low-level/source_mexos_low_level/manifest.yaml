@@ -1,0 +1,146 @@
+version: "0.29.0"
+
+definitions:
+
+  selector:
+    type: RecordSelector
+    extractor:
+      type: CustomRecordExtractor
+      # type: DpathExtractor
+      # field_path: ["data"]      
+      class_name: sourcecustomcomponents.CustomRecordExtractor.CustomRecordExtractor_for_mexos
+      field_path: []
+  requester:
+    type: CustomRequester
+    class_name: sourcecustomcomponents.CustomRequester.CustomRequester_for_mexos
+    url_base: "abc.com"
+    http_method: "POST"
+    authenticator:
+      type: CustomAuthenticator
+      class_name: sourcecustomcomponents.CustomAuthenticator.CustomAuthenticator
+  datetime_cursor:
+    type: "DatetimeBasedCursor"
+    start_datetime:
+      datetime: "{{ config['start_date'] }}"
+      datetime_format: "%Y-%m-%d"
+    end_datetime:
+      datetime: "{{ now_utc() }}"
+      datetime_format: "%Y-%m-%d %H:%M:%S.%f+00:00"
+    step: "P1D"
+    datetime_format: "%Y-%m-%d"
+    cursor_granularity: "P1D"
+    cursor_field: "date"
+  retriever:
+    type: SimpleRetriever
+    record_selector:
+      $ref: "#/definitions/selector"
+    paginator:
+      type: NoPagination
+    requester:
+      $ref: "#/definitions/requester"
+  base_stream:
+    type: DeclarativeStream
+    retriever:
+      $ref: "#/definitions/retriever"
+    incremental_sync:
+      type: CustomIncrementalSync
+      class_name: sourcecustomcomponents.CustomDateTimeBasedCursor.CustomDateTimeBasedCursor
+      start_datetime:
+        datetime: "{{ config['start_date'] }}"
+        datetime_format: "%Y-%m-%d"
+      end_datetime:
+        datetime: "{{ now_utc() }}"
+        datetime_format: "%Y-%m-%d %H:%M:%S.%f+00:00"
+      step: "P1D"
+      datetime_format: "%Y-%m-%d"
+      cursor_granularity: "P1D"
+      cursor_field: "date"
+      cursor_field_new: "date"
+      recovery_dates: "{{ config['recovery_dates'] }}"
+
+  statistics_report_stream:
+    $ref: "#/definitions/base_stream"
+    name: "statistics_report_stream"
+    $parameters:
+      path: "/rest/reports/run/atOnce"
+    transformations:
+      - type: AddFields
+        fields:
+          - path: [ "date" ]
+            value: "{{ stream_slice['start_time'] }}"
+          # - path: [ "tracker_login_id" ]
+          #   value: "{{ config['tracker_login_id'] }}"            
+
+streams:
+  - "#/definitions/statistics_report_stream"
+
+check:
+  type: CheckStream
+  stream_names:
+    - "statistics_report_stream"
+
+spec:
+  documentation_url: https://docsurl.com
+  connection_specification:
+    $schema: http://json-schema.org/draft-07/schema#
+    title: mexos Spec
+    type: object
+    required:
+      - base_url
+      - start_date
+      - username
+      - password
+      - tracker_login_id
+      - campaign_id
+      - id
+      - variable
+    properties:
+      # 'TODO: This schema defines the configuration required for the source. This usually involves metadata such as database and/or authentication information.':
+      base_url:
+        type: string
+        description: operator api base url
+        order: 1
+      start_date:
+        type: string
+        description: Start getting data from that date.
+        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+        examples:
+          - "%Y-%m-%d"
+        order: 7
+      tracker_login_id:
+        type: string
+        description: bankrolls.com tracker login id
+        order: 8
+      campaign_id:
+        type: string
+        description: campaign_id
+        order: 6
+      id:
+        type: string
+        description: id
+        order: 4
+      variable:
+        type: string
+        description: variable
+        order: 5
+      username:
+        type: string
+        description: username.
+        order: 2
+      password:
+        type: string
+        description: password.
+        airbyte_secret: true
+        order: 3
+      loopback_days:
+        type: number 
+        description: number of lookback_days, default is 10 days
+        order: 9
+      recovery_dates:
+        type: string
+        description: list of recovery dates comma separated
+        order: 10
+      is_recovery:
+        type: boolean
+        description: check recovery 
+        order: 11

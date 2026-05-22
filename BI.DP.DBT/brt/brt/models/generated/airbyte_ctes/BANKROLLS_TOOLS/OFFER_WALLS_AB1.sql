@@ -1,0 +1,71 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    tags = [ "top-level-intermediate" ]
+) }}
+
+
+-- SQL model to parse JSON blob stored in a single column and extract into separated field columns as described by the JSON Schema
+-- depends_on: {{ source('BRT', '_AIRBYTE_RAW_OFFER_WALLS') }}
+select
+    {{ json_extract_scalar('_airbyte_data', ['featured'], ['featured']) }} as FEATURED,
+    {{ json_extract_scalar('_airbyte_data', ['preview_text_color'], ['preview_text_color']) }} as PREVIEW_TEXT_COLOR,
+    {{ json_extract_scalar('_airbyte_data', ['loader'], ['loader']) }} as LOADER,
+    {{ json_extract_scalar('_airbyte_data', ['language_id'], ['language_id']) }} as LANGUAGE_ID,
+    {{ json_extract_scalar('_airbyte_data', ['uuid'], ['uuid']) }} as UUID,
+    {{ json_extract_scalar('_airbyte_data', ['ribbon_three'], ['ribbon_three']) }} as RIBBON_THREE,
+    {{ json_extract_scalar('_airbyte_data', ['reviewed'], ['reviewed']) }} as REVIEWED,
+    {{ json_extract_scalar('_airbyte_data', ['id'], ['id']) }} as ID,
+    {{ json_extract_scalar('_airbyte_data', ['state_id'], ['state_id']) }} as STATE_ID,
+    {{ json_extract_scalar('_airbyte_data', ['offer_type'], ['offer_type']) }} as OFFER_TYPE,
+    {{ json_extract_scalar('_airbyte_data', ['update_approved'], ['update_approved']) }} as UPDATE_APPROVED,
+    {{ json_extract_scalar('_airbyte_data', ['order'], ['order']) }} as {{ adapter.quote('order') }},
+    {{ json_extract_scalar('_airbyte_data', ['offers'], ['offers']) }} as OFFERS,
+    {{ json_extract_scalar('_airbyte_data', ['ribbon_two'], ['ribbon_two']) }} as RIBBON_TWO,
+    {{ json_extract_scalar('_airbyte_data', ['show_footer'], ['show_footer']) }} as SHOW_FOOTER,
+    {{ json_extract_scalar('_airbyte_data', ['show_preview_button'], ['show_preview_button']) }} as SHOW_PREVIEW_BUTTON,
+    {{ json_extract_scalar('_airbyte_data', ['order_time_period'], ['order_time_period']) }} as ORDER_TIME_PERIOD,
+    {{ json_extract_scalar('_airbyte_data', ['count'], ['count']) }} as COUNT,
+    {{ json_extract_scalar('_airbyte_data', ['ribbon'], ['ribbon']) }} as RIBBON,
+    {{ json_extract_scalar('_airbyte_data', ['footer_script'], ['footer_script']) }} as FOOTER_SCRIPT,
+    {{ json_extract_scalar('_airbyte_data', ['order_direction'], ['order_direction']) }} as ORDER_DIRECTION,
+    {{ json_extract_scalar('_airbyte_data', ['params'], ['params']) }} as PARAMS,
+    {{ json_extract_scalar('_airbyte_data', ['is_default'], ['is_default']) }} as IS_DEFAULT,
+    {{ json_extract_scalar('_airbyte_data', ['version'], ['version']) }} as VERSION,
+    {{ json_extract_scalar('_airbyte_data', ['created_by'], ['created_by']) }} as CREATED_BY,
+    {{ json_extract_scalar('_airbyte_data', ['deleted_at'], ['deleted_at']) }} as DELETED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['license_status'], ['license_status']) }} as LICENSE_STATUS,
+    {{ json_extract_scalar('_airbyte_data', ['traffic_source'], ['traffic_source']) }} as TRAFFIC_SOURCE,
+    {{ json_extract_scalar('_airbyte_data', ['after_body_script'], ['after_body_script']) }} as AFTER_BODY_SCRIPT,
+    {{ json_extract_scalar('_airbyte_data', ['user_id'], ['user_id']) }} as USER_ID,
+    {{ json_extract_scalar('_airbyte_data', ['name'], ['name']) }} as NAME,
+    {{ json_extract_scalar('_airbyte_data', ['updated_by'], ['updated_by']) }} as UPDATED_BY,
+    {{ json_extract_scalar('_airbyte_data', ['ribbon_one'], ['ribbon_one']) }} as RIBBON_ONE,
+    {{ json_extract_scalar('_airbyte_data', ['country_id'], ['country_id']) }} as COUNTRY_ID,
+    {{ json_extract_scalar('_airbyte_data', ['licensed_states'], ['licensed_states']) }} as LICENSED_STATES,
+    {{ json_extract_scalar('_airbyte_data', ['template'], ['template']) }} as TEMPLATE,
+    {{ json_extract_scalar('_airbyte_data', ['created_at'], ['created_at']) }} as CREATED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['auto_stars_minimum'], ['auto_stars_minimum']) }} as AUTO_STARS_MINIMUM,
+    {{ json_extract_scalar('_airbyte_data', ['auto_stars'], ['auto_stars']) }} as AUTO_STARS,
+    {{ json_extract_scalar('_airbyte_data', ['geo'], ['geo']) }} as GEO,
+    {{ json_extract_scalar('_airbyte_data', ['custom_order'], ['custom_order']) }} as CUSTOM_ORDER,
+    {{ json_extract_scalar('_airbyte_data', ['search'], ['search']) }} as SEARCH,
+    {{ json_extract_scalar('_airbyte_data', ['updated_at'], ['updated_at']) }} as UPDATED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['publisher_key_id'], ['publisher_key_id']) }} as PUBLISHER_KEY_ID,
+    {{ json_extract_scalar('_airbyte_data', ['archived_at'], ['archived_at']) }} as ARCHIVED_AT,
+    {{ json_extract_scalar('_airbyte_data', ['preview_button_color'], ['preview_button_color']) }} as PREVIEW_BUTTON_COLOR,
+    {{ json_extract_scalar('_airbyte_data', ['payment_option'], ['payment_option']) }} as PAYMENT_OPTION,
+    {{ json_extract_scalar('_airbyte_data', ['licensed_country'], ['licensed_country']) }} as LICENSED_COUNTRY,
+    {{ json_extract_scalar('_airbyte_data', ['br_status'], ['br_status']) }} as BR_STATUS,
+    {{ json_extract_scalar('_airbyte_data', ['order_by'], ['order_by']) }} as ORDER_BY,
+    {{ json_extract_scalar('_airbyte_data', ['header_script'], ['header_script']) }} as HEADER_SCRIPT,
+    {{ json_extract_scalar('_airbyte_data', ['currency_id'], ['currency_id']) }} as CURRENCY_ID,
+    {{ json_extract_scalar('_airbyte_data', ['landers'], ['landers']) }} as LANDERS,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ source('BRT', '_AIRBYTE_RAW_OFFER_WALLS') }} as table_alias
+-- OFFER_WALLS
+where 1 = 1
+

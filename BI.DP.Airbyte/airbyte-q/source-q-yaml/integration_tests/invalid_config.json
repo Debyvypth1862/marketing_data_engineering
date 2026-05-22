@@ -1,0 +1,7 @@
+{
+  "base_url":"https://affiliates-api.example-platform.com",
+  "start":"2023-08-01",
+  "tracker_login_id":"P1D",
+  "token":"<YOUR_API_TOKEN>",
+  "merchants":"1,2"
+}

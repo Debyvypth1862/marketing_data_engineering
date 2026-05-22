@@ -1,0 +1,78 @@
+name: api_endpoint
+version: '1.0'
+config-version: 2
+profile: api_endpoint
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: ../dbt
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  api_endpoint:
+    +materialized: table
+    generated:
+      airbyte_ctes:
+        +tags: airbyte_internal_cte
+        +materialized: ephemeral
+        API_STREAMIA:
+          +enabled: false
+      airbyte_incremental:
+        +tags: incremental_tables
+        +materialized: incremental
+        +on_schema_change: sync_all_columns
+        API_STREAMIA:
+          +enabled: false
+        scd:
+          API_STREAMIA:
+            +enabled: false
+      airbyte_views:
+        +tags: airbyte_internal_views
+        +materialized: view
+        API_STREAMIA:
+          +enabled: false
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - api_endpoint
+  - dbt_utils
+vars:
+  models_to_source:
+    API_TRAFFICX_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_TRAFFICX_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_TRAFFICX: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_ELIJAHPONOMAREF_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_ELIJAHPONOMAREF_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_ELIJAHPONOMAREF: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_SEO_API_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_SEO_API_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_SEO_API: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_GCLID_REPORT_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_GCLID_REPORT_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_GCLID_REPORT: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_CAMPAIGN_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_CAMPAIGN_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_CAMPAIGN: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_ADVERTISER_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_ADVERTISER_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_STREAMIA_ADVERTISER: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_HIGHROLLER_AB1: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_HIGHROLLER_STG: EXP.PUBLIC.FACT_OPERATOR_AGG
+    API_HIGHROLLER: EXP.PUBLIC.FACT_OPERATOR_AGG

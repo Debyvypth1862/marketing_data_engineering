@@ -1,0 +1,73 @@
+version: 2
+sources:
+- name: SAPPHIREBET
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+  - name: _AIRBYTE_RAW_PLAYERS_REPORT
+    external:
+      location: "@STG.SAPPHIREBET.S3_ESTG_SAPPHIREBET_JSON_FF"
+      pattern: "(?i)(?=.*/SAPPHIREBET/)(?=.*/players_report/)^.*"
+      file_format: "STG.SAPPHIREBET.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: tracker_login_id
+        data_type: VARCHAR
+        expression: CAST(SPLIT_PART(METADATA$FILENAME, '/', -3) AS VARCHAR)
+      - name: siteId
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'siteId') AS VARCHAR)
+      - name: siteName
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'siteName') AS VARCHAR)
+      - name: mediaId
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'mediaId') AS VARCHAR)
+      - name: subId
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'subId') AS VARCHAR)
+      - name: playerId
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'playerId') AS VARCHAR)
+      - name: registrationDate
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'registrationDate') AS VARCHAR)
+      - name: country
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'country') AS VARCHAR)
+      - name: depositAmount
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'depositAmount') AS VARCHAR)
+      - name: betsAmount
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'betsAmount') AS VARCHAR)
+      - name: bonusAmount
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'bonusAmount') AS VARCHAR)
+      - name: companyProfit
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'companyProfit') AS VARCHAR)
+      - name: comissionRS
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'comissionRS') AS VARCHAR)
+      - name: CPA
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'CPA') AS VARCHAR)
+      - name: comissionAmount
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'comissionAmount') AS VARCHAR)
+      - name: holdTime
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'holdTime') AS VARCHAR)
+      - name: blocked
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'blocked') AS VARCHAR)
+      - name: clickId
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, 'clickId') AS VARCHAR)
+      - name: __typename
+        data_type: VARCHAR
+        expression: CAST(GET_PATH($1, '__typename') AS VARCHAR)

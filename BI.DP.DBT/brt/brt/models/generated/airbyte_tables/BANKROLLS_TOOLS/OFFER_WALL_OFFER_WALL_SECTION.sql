@@ -1,0 +1,27 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    database = env_var('RAW_DATABASE'),
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+-- depends_on: {{ ref('OFFER_WALL_OFFER_WALL_SECTION_STG') }}
+select
+    
+    OFFER_WALL_SECTION_ID,
+    UPDATED_AT,
+    OFFER_WALL_ID,
+    HEADER,
+    CREATED_AT,
+    ID,
+    {{ adapter.quote('order') }},
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT,
+    _AIRBYTE_OFFER_WALL_OFFER_WALL_SECTION_HASHID
+from {{ ref('OFFER_WALL_OFFER_WALL_SECTION_STG') }}
+-- OFFER_WALL_OFFER_WALL_SECTION from {{ source('BRT', '_AIRBYTE_RAW_OFFER_WALL_OFFER_WALL_SECTION') }}
+where 1 = 1
+
+

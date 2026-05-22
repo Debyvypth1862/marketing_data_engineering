@@ -1,0 +1,47 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = "_AIRBYTE_AB_ID",
+	database = env_var('RAW_DATABASE'),
+    schema = "BRC",
+    tags = [ "top-level" ]
+) }}
+-- Final base SQL model
+-- depends_on: {{ ref('CAMPAIGNS_AB2') }}
+select
+    CAMP_CATEGORY,
+	CAMP_COUNTRY,
+	CAMP_CPA_IN,
+	CAMP_CPA_OUT,
+	CAMP_CPL_IN,
+	CAMP_CPL_OUT,
+	CAMP_CREATED,
+	CAMP_CREATED_BY,
+	CAMP_CURRENCY,
+	CAMP_DEPOSIT_BASELINE,
+	CAMP_DESCRIPTION,
+	CAMP_DISPLAY_DEAL,
+	CAMP_ENDED,
+	CAMP_FK_ADVERTISER,
+	CAMP_FK_BRAND,
+	CAMP_HIDDEN,
+	CAMP_HISTORY,
+	CAMP_HYBRID,
+	CAMP_ID,
+	CAMP_LANGUAGE,
+	CAMP_LICENSED,
+	CAMP_NAME,
+	CAMP_REV_DEAL,
+	CAMP_REV_IN,
+	CAMP_REV_OUT,
+	CAMP_STATUS,
+	CAMP_TRAFFIC_SOURCE,
+	CAMP_TYPE,
+	CAMP_UPDATED,
+	CAMP_UPDATED_BY,
+	CAMP_WAGER_BASELINE,    
+    _AIRBYTE_AB_ID,
+	_AIRBYTE_EMITTED_AT,
+	{{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('CAMPAIGNS_AB2') }}
+-- CAMPAIGNS from {{ source('BRC', '_AIRBYTE_RAW_CAMPAIGNS') }}
+where 1 = 1

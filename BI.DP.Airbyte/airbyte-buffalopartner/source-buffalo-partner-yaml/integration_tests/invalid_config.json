@@ -1,0 +1,9 @@
+{
+  "base_url":"https://www.example-affiliate.com",
+  "start_date":"2023-09-20",
+  "end_date":"2023-09-21",
+  "tracker_login_id":"10",
+  "username":"<YOUR_USERNAME>",
+  "apikey":"<YOUR_API_KEY>",
+  "lookback_days": "0"
+}

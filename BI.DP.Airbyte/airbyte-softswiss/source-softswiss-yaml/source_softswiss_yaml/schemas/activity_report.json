@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "report_type": {
+      "type": "string"
+    },
+    "rows": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {},
+                "type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "type"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {},
+                "type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "type"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "relations": {
+      "type": "object",
+      "properties": {
+        "campaigns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "strategy": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "strategy"
+            ]
+          }
+        },
+        "promos": {
+          "type": "array",
+          "items": {}
+        },
+        "brands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          }
+        },
+        "partners": {
+          "type": "array",
+          "items": {}
+        },
+        "dedicated_operators": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "campaigns",
+        "promos",
+        "brands",
+        "partners",
+        "dedicated_operators"
+      ]
+    },
+    "current_page": {
+      "type": "number"
+    },
+    "total_pages": {
+      "type": "number"
+    },
+    "current_per_page": {
+      "type": "number"
+    },
+    "total_count": {
+      "type": "number"
+    },
+    "date": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string"
+    },
+    "end_date": {
+      "type": "string"
+    },
+    "tracker_login_id": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "report_type",
+    "rows",
+    "totals",
+    "relations",
+    "current_page",
+    "total_pages",
+    "current_per_page",
+    "total_count"
+  ]
+}

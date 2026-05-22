@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+  - name: funnel_ads_data
+    description: "Funnel.io Facebook Ads data source"
+    database: "ADS_DATA"
+    schema: "FUNNEL__YOUR_FUNNEL_WORKSPACE_ID"
+    tables:
+      - name: PROD_AWS_RAW_STANDARD_WS_FACEBOOK_ADS_CAMPAIGN_SUMMARY_APOSTE_PREMIA
+        description: "Facebook Ads campaign summary data for Aposte Premia from Funnel.io"
+        identifier: "PROD_AWS_RAW_STANDARD_WS_FACEBOOK_ADS_CAMPAIGN_SUMMARY_APOSTE_PREMIA"
+        columns:
+          - name: FUNNEL_WORKSPACE_NAME
+            description: "Funnel workspace name"
+          - name: CONNECTOR_NAME
+            description: "Data connector name"
+          - name: DATA_SOURCE_NAME
+            description: "Data source name"
+          - name: DATE
+            description: "Campaign date"
+          - name: TRAFFIC_SOURCE
+            description: "Traffic source (e.g., Facebook)"
+          - name: MEDIA_TYPE
+            description: "Media type (e.g., Social)"
+          - name: PAID__ORGANIC
+            description: "Paid or organic traffic indicator"
+          - name: CURRENCY
+            description: "Currency code"
+          - name: AD_ACCOUNT_NAME__FACEBOOK_ADS
+            description: "Facebook Ads account name"
+          - name: CAMPAIGN
+            description: "Campaign name"
+          - name: CAMPAIGN_ID__FACEBOOK_ADS
+            description: "Facebook Ads campaign ID"
+          - name: AD_ACCOUNT_ID__FACEBOOK_ADS
+            description: "Facebook Ads account ID"
+          - name: COST
+            description: "Campaign cost"
+          - name: CLICKS_ALL__FACEBOOK_ADS
+            description: "Total clicks from Facebook Ads"
+          - name: IMPRESSIONS__FACEBOOK_ADS
+            description: "Total impressions from Facebook Ads"

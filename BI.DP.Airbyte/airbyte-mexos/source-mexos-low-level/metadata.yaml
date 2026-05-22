@@ -1,0 +1,22 @@
+data:
+  allowedHosts:
+    hosts:
+      - TODO # Please change to the hostname of the source.
+  registries:
+    oss:
+      enabled: false
+  connectorSubtype: api
+  connectorType: source
+  definitionId: 1bb57ab4-1069-4443-bb7e-fc9edd9d4c03
+  dockerImageTag: 0.1.0
+  dockerRepository: airbyte/source-mexos-low-level
+  githubIssueLabel: source-mexos-low-level
+  icon: mexos-low-level.svg
+  license: MIT
+  name: Mexos Low Level
+  releaseDate: TODO
+  releaseStage: alpha
+  documentationUrl: https://docs.airbyte.com/integrations/sources/mexos-low-level
+  tags:
+    - language:lowcode
+metadataSpecVersion: "1.0"

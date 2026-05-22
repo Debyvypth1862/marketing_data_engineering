@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "start": {
+      "type": ["null", "string"]
+    },
+    "end": {
+      "type": ["null", "string"]
+    },
+    "tracker_login_id": {
+      "type": ["null", "string"]
+    },
+    "merchant": {
+      "type": ["null", "string"]
+    },
+    "data": {
+      "type": ["null", "object"]
+    }
+  }
+}

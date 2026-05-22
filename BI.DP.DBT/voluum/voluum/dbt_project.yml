@@ -1,0 +1,108 @@
+name: airbyte_utils
+version: '1.0'
+config-version: 2
+profile: VOLUUM
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: ../dbt
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  airbyte_utils:
+    +materialized: table
+    generated:
+      airbyte_ctes:
+        +tags: airbyte_internal_cte
+        +materialized: ephemeral
+      airbyte_incremental:
+        +tags: incremental_tables
+        +materialized: incremental
+        +on_schema_change: sync_all_columns
+      airbyte_tables:
+        +tags: normalized_tables
+        +materialized: table
+      airbyte_views:
+        +tags: airbyte_internal_views
+        +materialized: view
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - airbyte_utils
+  - dbt_utils
+vars:
+  json_column: _airbyte_data
+  models_to_source:
+    CONVERSIONS_AB1: voluum._AIRBYTE_RAW_CONVERSIONS
+    CONVERSIONS_AB2: voluum._AIRBYTE_RAW_CONVERSIONS
+    CONVERSIONS_STG: voluum._AIRBYTE_RAW_CONVERSIONS
+    CONVERSIONS_SCD: voluum._AIRBYTE_RAW_CONVERSIONS
+    CONVERSIONS: voluum._AIRBYTE_RAW_CONVERSIONS
+    TRAFFIC_SOURCE_REPORT_AB1: voluum._AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT
+    TRAFFIC_SOURCE_REPORT_AB2: voluum._AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT
+    TRAFFIC_SOURCE_REPORT_STG: voluum._AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT
+    TRAFFIC_SOURCE_REPORT_SCD: voluum._AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT
+    TRAFFIC_SOURCE_REPORT: voluum._AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT
+    CAMPAIGN_REPORT_AB1: voluum._AIRBYTE_RAW_CAMPAIGN_REPORT
+    CAMPAIGN_REPORT_AB2: voluum._AIRBYTE_RAW_CAMPAIGN_REPORT
+    CAMPAIGN_REPORT_STG: voluum._AIRBYTE_RAW_CAMPAIGN_REPORT
+    CAMPAIGN_REPORT_SCD: voluum._AIRBYTE_RAW_CAMPAIGN_REPORT
+    CAMPAIGN_REPORT: voluum._AIRBYTE_RAW_CAMPAIGN_REPORT
+    AFFILIATE_NETWORK_REPORT_AB1: voluum._AIRBYTE_RAW_AFFILIATE_NETWORK_REPORT
+    AFFILIATE_NETWORK_REPORT_AB2: voluum._AIRBYTE_RAW_AFFILIATE_NETWORK_REPORT
+    AFFILIATE_NETWORK_REPORT_STG: voluum._AIRBYTE_RAW_AFFILIATE_NETWORK_REPORT
+    AFFILIATE_NETWORK_REPORT_SCD: voluum._AIRBYTE_RAW_AFFILIATE_NETWORK_REPORT
+    AFFILIATE_NETWORK_REPORT: voluum._AIRBYTE_RAW_AFFILIATE_NETWORK_REPORT
+    FLOW_REPORT_AB1: voluum._AIRBYTE_RAW_FLOW_REPORT
+    FLOW_REPORT_AB2: voluum._AIRBYTE_RAW_FLOW_REPORT
+    FLOW_REPORT_STG: voluum._AIRBYTE_RAW_FLOW_REPORT
+    FLOW_REPORT_SCD: voluum._AIRBYTE_RAW_FLOW_REPORT
+    FLOW_REPORT: voluum._AIRBYTE_RAW_FLOW_REPORT
+    LANDER_REPORT_AB1: voluum._AIRBYTE_RAW_LANDER_REPORT
+    LANDER_REPORT_AB2: voluum._AIRBYTE_RAW_LANDER_REPORT
+    LANDER_REPORT_STG: voluum._AIRBYTE_RAW_LANDER_REPORT
+    LANDER_REPORT_SCD: voluum._AIRBYTE_RAW_LANDER_REPORT
+    LANDER_REPORT: voluum._AIRBYTE_RAW_LANDER_REPORT
+    OFFER_REPORT_AB1: voluum._AIRBYTE_RAW_OFFER_REPORT
+    OFFER_REPORT_AB2: voluum._AIRBYTE_RAW_OFFER_REPORT
+    OFFER_REPORT_STG: voluum._AIRBYTE_RAW_OFFER_REPORT
+    OFFER_REPORT_SCD: voluum._AIRBYTE_RAW_OFFER_REPORT
+    OFFER_REPORT: voluum._AIRBYTE_RAW_OFFER_REPORT
+    AFFILIATE_NETWORKS_AB1: voluum._AIRBYTE_RAW_AFFILIATE_NETWORKS
+    AFFILIATE_NETWORKS_AB2: voluum._AIRBYTE_RAW_AFFILIATE_NETWORKS
+    AFFILIATE_NETWORKS: voluum._AIRBYTE_RAW_AFFILIATE_NETWORKS
+    CAMPAIGNS_AB1: voluum._AIRBYTE_RAW_CAMPAIGNS
+    CAMPAIGNS_AB2: voluum._AIRBYTE_RAW_CAMPAIGNS
+    CAMPAIGNS: voluum._AIRBYTE_RAW_CAMPAIGNS
+    FLOWS_AB1: voluum._AIRBYTE_RAW_FLOWS
+    FLOWS_AB2: voluum._AIRBYTE_RAW_FLOWS
+    FLOWS: voluum._AIRBYTE_RAW_FLOWS
+    LANDERS_AB1: voluum._AIRBYTE_RAW_LANDERS
+    LANDERS_AB2: voluum._AIRBYTE_RAW_LANDERS
+    LANDERS: voluum._AIRBYTE_RAW_LANDERS
+    OFFERS_AB1: voluum._AIRBYTE_RAW_OFFERS
+    OFFERS_AB2: voluum._AIRBYTE_RAW_OFFERS
+    OFFERS: voluum._AIRBYTE_RAW_OFFERS
+    TRAFFIC_SOURCES_AB1: voluum._AIRBYTE_RAW_TRAFFIC_SOURCES
+    TRAFFIC_SOURCES_AB2: voluum._AIRBYTE_RAW_TRAFFIC_SOURCES
+    TRAFFIC_SOURCES: voluum._AIRBYTE_RAW_TRAFFIC_SOURCES
+    WORKSPACES_AB1: voluum._AIRBYTE_RAW_WORKSPACES
+    WORKSPACES_AB2: voluum._AIRBYTE_RAW_WORKSPACES
+    WORKSPACES: voluum._AIRBYTE_RAW_WORKSPACES

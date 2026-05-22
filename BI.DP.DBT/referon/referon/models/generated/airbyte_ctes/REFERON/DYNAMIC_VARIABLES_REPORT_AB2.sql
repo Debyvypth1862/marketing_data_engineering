@@ -1,0 +1,73 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "REFERON",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to cast each column to its adequate SQL type converted from the JSON schema type
+-- depends_on: {{ ref('DYNAMIC_VARIABLES_REPORT_AB1') }}
+select
+    cast(Click_Count as {{ dbt_utils.type_float() }}) as Click_Count ,
+    cast(Traffic_Type as {{ dbt_utils.type_string() }}) as Traffic_Type ,
+    cast(FTDs_Deposits as {{ dbt_utils.type_float() }}) as FTDs_Deposits,
+    cast(Banner_View_Count as {{ dbt_utils.type_float() }}) as Banner_View_Count ,
+    cast(Marketing_Source  as {{ dbt_utils.type_string() }}) as Marketing_Source  ,
+    cast(Dynamic_variables as {{ dbt_utils.type_string() }}) as Dynamic_variables ,
+    cast(Avg_deposit as {{ dbt_utils.type_float() }}) as Avg_deposit ,
+    cast(Program_ID as {{ dbt_utils.type_float() }}) as Program_ID ,
+    cast(TURNOVER as {{ dbt_utils.type_float() }}) as TURNOVER,
+    cast(CPA_count as {{ dbt_utils.type_float() }}) as CPA_count ,
+    cast(Unique_Click_Count as {{ dbt_utils.type_float() }}) as Unique_Click_Count ,
+    cast(Deposits_per_FTD as {{ dbt_utils.type_float() }}) as Deposits_per_FTD ,
+    cast(Count_of_deposits as {{ dbt_utils.type_float() }}) as Count_of_deposits ,
+    cast(Brand_ID as {{ dbt_utils.type_float() }}) as Brand_ID ,
+    cast(Active_customers as {{ dbt_utils.type_float() }}) as Active_customers ,
+    cast(DEPOSITS as {{ dbt_utils.type_float() }}) as DEPOSITS,
+    cast(Reg_to_FTD as {{ dbt_utils.type_float() }}) as Reg_to_FTD ,
+    cast(Marketing_Source_ID as {{ dbt_utils.type_float() }}) as Marketing_Source_ID ,
+    cast(Media_Item_ID as {{ dbt_utils.type_float() }}) as Media_Item_ID ,
+    cast(CPC_count as {{ dbt_utils.type_float() }}) as CPC_count ,
+    cast(GEO as {{ dbt_utils.type_string() }}) as GEO,
+    cast(Customer_ID as {{ dbt_utils.type_string() }}) as Customer_ID ,
+    cast(CLICK_ID as {{ dbt_utils.type_string() }}) as CLICK_ID,
+    cast(Media_Item_Name as {{ dbt_utils.type_string() }}) as Media_Item_Name ,
+    cast(NGR as {{ dbt_utils.type_float() }}) as NGR,
+    cast(PUBID as {{ dbt_utils.type_string() }}) as PUBID,
+    cast(Product_ID as {{ dbt_utils.type_float() }}) as Product_ID ,
+    cast(Program_Name as {{ dbt_utils.type_string() }}) as Program_Name ,
+    cast(Media_Campaign_Name as {{ dbt_utils.type_string() }}) as Media_Campaign_Name ,
+    cast(FTD_Count as {{ dbt_utils.type_float() }}) as FTD_Count ,
+    cast(Rewarding_Plan as {{ dbt_utils.type_string() }}) as Rewarding_Plan ,
+    cast(Customer_Reg_Date as {{ dbt_utils.type_string() }}) as Customer_Reg_Date ,
+    cast(NDC as {{ dbt_utils.type_float() }}) as NDC,
+    cast(SUBID as {{ dbt_utils.type_string() }}) as SUBID,
+    cast(VAR5 as {{ dbt_utils.type_string() }}) as VAR5,
+    cast(VAR4 as {{ dbt_utils.type_string() }}) as VAR4,
+    cast(Click_to_FTD as {{ dbt_utils.type_float() }}) as Click_to_FTD ,
+    cast(RS_distribution as {{ dbt_utils.type_float() }}) as RS_distribution ,
+    cast(VAR3 as {{ dbt_utils.type_string() }}) as VAR3,
+    cast(VAR2 as {{ dbt_utils.type_string() }}) as VAR2,
+    cast(VAR1 as {{ dbt_utils.type_string() }}) as VAR1,
+    cast(Depositing_customers as {{ dbt_utils.type_float() }}) as Depositing_customers ,
+    cast(Product_Name as {{ dbt_utils.type_string() }}) as Product_Name ,
+    cast(Media_Campaign_ID as {{ dbt_utils.type_float() }}) as Media_Campaign_ID ,
+    cast(Total_Reward as {{ dbt_utils.type_float() }}) as Total_Reward ,
+    cast(CLICKID as {{ dbt_utils.type_string() }}) as CLICKID,
+    cast(Revenue_Share as {{ dbt_utils.type_float() }}) as Revenue_Share ,
+    cast(DATE as {{ dbt_utils.type_string() }}) as DATE,
+    cast(Brand_Name as {{ dbt_utils.type_string() }}) as Brand_Name ,
+    cast(Reg_Count as {{ dbt_utils.type_float() }}) as Reg_Count ,
+    cast(CPA as {{ dbt_utils.type_float() }}) as CPA,
+    cast(CPC as {{ dbt_utils.type_float() }}) as CPC,
+    cast(Fixed_Fee as {{ dbt_utils.type_float() }}) as Fixed_Fee ,
+    cast(TRACKER_LOGIN_ID as {{ dbt_utils.type_string() }}) as TRACKER_LOGIN_ID ,
+    _AIRBYTE_AB_ID,
+    cast(_AIRBYTE_EMITTED_AT as TIMESTAMP_TZ(9)) as _AIRBYTE_EMITTED_AT,
+    S3_PATH,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ ref('DYNAMIC_VARIABLES_REPORT_AB1') }}
+-- DYNAMIC_VARIABLES_REPORT
+where 1 = 1
+{{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+-- AND NET_REVENUE IS NOT NULL
+-- AND CLICK_ID IS NOT NULL

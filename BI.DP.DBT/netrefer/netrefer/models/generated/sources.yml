@@ -1,0 +1,54 @@
+version: 2
+sources:
+- name: NETREFER
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+    - name: _AIRBYTE_RAW_DYNAMIC_VARIABLES_REPORT_STREAM
+      external:
+        location: "@STG.NETREFER.S3_ESTG_NETREFER_JSON_FF"
+        pattern: "(?=.*/dynamic_variables_report_stream/)^.*"
+        file_format: "STG.NETREFER.JSON_FF"
+        auto_refresh: false
+        refresh_on_create: false
+        partitions:
+          - name: _AIRBYTE_EMITTED_AT
+            data_type: date
+            expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+      columns:
+        - name: _AIRBYTE_AB_ID
+          data_type: VARCHAR(16777216)
+          expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+        - name: _AIRBYTE_DATA
+          data_type: VARIANT
+          expression: "GET($1, '_airbyte_data')"
+        - name: JOB_DATE
+          data_type: VARCHAR(16777216)
+          expression: "CAST(GET(_AIRBYTE_DATA, 'date') AS VARCHAR(16777216))"
+        - name: TRACKER_LOGIN_ID
+          data_type: VARCHAR(16777216)
+          expression: "CAST(GET(_AIRBYTE_DATA, 'tracker_login_id') AS VARCHAR(16777216))"
+        - name: FILE_NAME
+          data_type: VARCHAR(16777216)
+          expression: "METADATA$FILENAME"
+        - name: FILE_ROW_NUMBER
+          data_type: NUMBER(38,0)
+          expression: "METADATA$FILE_ROW_NUMBER"
+        - name: PLATFORM_NAME
+          data_type: VARCHAR(16777216)
+          expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+        - name: OPERATOR_NAME
+          data_type: VARCHAR(16777216)
+          expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+        - name: ACCOUNT_NAME
+          data_type: VARCHAR(16777216)
+          expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+        - name: S3_PATH
+          data_type: VARCHAR(16777216)
+          expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+- name: PUBLIC
+  database: "{{ env_var('snowflake_db_dbt') }}"
+  tables:
+    - name: S3_FILES_STATS

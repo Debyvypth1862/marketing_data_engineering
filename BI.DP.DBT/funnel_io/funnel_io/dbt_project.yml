@@ -1,0 +1,41 @@
+name: funnel_io
+version: '1.0'
+config-version: 2
+profile: funnel_io
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: ../dbt
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  funnel_io:
+    +materialized: table
+    incremental:
+      +materialized: incremental
+      +on_schema_change: sync_all_columns
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - funnel_io
+  - dbt_utils
+vars:
+  models_to_source:
+    ADS_CAMPAIGN_SUMMARY: RAW.FUNNEL_IO.ADS_CAMPAIGN_SUMMARY

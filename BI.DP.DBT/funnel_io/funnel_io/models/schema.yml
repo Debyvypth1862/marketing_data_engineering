@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: ADS_CAMPAIGN_SUMMARY
+    description: "Facebook Ads campaign summary data upserted from Funnel.io"
+    columns:
+      - name: FUNNEL_WORKSPACE_NAME
+        description: "Funnel workspace name"
+        tests:
+          - not_null
+      - name: DATE
+        description: "Campaign date - part of unique key"
+        tests:
+          - not_null
+      - name: AD_ACCOUNT_NAME
+        description: "Facebook Ads account name - part of unique key"
+        tests:
+          - not_null
+      - name: TRAFFIC_SOURCE
+        description: "Traffic source (e.g., Facebook)"
+      - name: MEDIA_TYPE
+        description: "Media type (e.g., Social)"
+      - name: PAID_ORGANIC
+        description: "Paid or organic traffic indicator"
+      - name: CURRENCY
+        description: "Currency code"
+      - name: CAMPAIGN
+        description: "Campaign name"
+      - name: CAMPAIGN_ID
+        description: "Facebook Ads campaign ID"
+      - name: AD_ACCOUNT_ID
+        description: "Facebook Ads account ID"
+      - name: COST
+        description: "Campaign cost"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: CLICKS
+        description: "Total clicks from Facebook Ads"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: IMPRESSIONS
+        description: "Total impressions from Facebook Ads"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0

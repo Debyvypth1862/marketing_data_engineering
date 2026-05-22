@@ -1,0 +1,30 @@
+{{ 
+    config(
+        materialized='view',
+        database=env_var('STG_DATABASE'),
+        schema="SPREE"
+    ) 
+}}
+SELECT DISTINCT
+    a.ALLOWED_ACTIONS,
+    a.CLICK_ID_VARIABLE AS CLICKID_VARIABLE,
+    a.CREATED_TIME,
+    a.CURRENCY_CODE,
+    a.CUSTOM_POSTBACKS_CONFIGURATION,
+    a.CUSTOM_VARIABLES,
+    a.DELETED,
+    a.DIRECT_TRACKING,
+    a.EXTERNAL_IDS,
+    a.ID,
+    a.IMPRESSION_SPECIFIC,
+    a.LIMITED_GEO_TRACKING,
+    a.NAME,
+    a.SKIP_SENDING_POSTBACK,
+    a.TYPE,
+    a.UPDATED_TIME,
+    a.WORKSPACE,
+    a._AIRBYTE_EMITTED_AT
+FROM {{ source('VOLUUM_SCD', 'TRAFFIC_SOURCES_SCD') }} AS a
+INNER JOIN {{ ref('SPREE_VOLUUM_CONVERSIONS') }} AS b
+    ON b.TRAFFIC_SOURCE_ID = a.ID
+WHERE UPPER(NAME) LIKE '%SPREE%'

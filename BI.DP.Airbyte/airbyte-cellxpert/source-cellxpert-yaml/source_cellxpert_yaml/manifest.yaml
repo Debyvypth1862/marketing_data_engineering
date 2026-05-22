@@ -1,0 +1,242 @@
+version: "0.29.0"
+
+definitions:
+  selector:
+    type: RecordSelector
+    extractor:
+      type: CustomRecordExtractor
+      class_name: sourcecustomcomponents.CustomRecordExtractor.CustomRecordExtractor
+      field_path: [ ]
+      
+  requester:
+    type: CustomRequester
+    class_name: sourcecustomcomponents.CustomRequester.CustomRequester_cellxpert_activityreport
+    url_base: "abc.com"
+    # http_method: "GET"
+    # request_parameters:
+    #   api_username: "{{ config['api_username'] }}"
+    #   api_password: "{{ config['api_password'] }}" 
+    #   fromdate: "{{ stream_slice['start_time'] }}"
+    #   todate: "{{ stream_slice['start_time'] }}"
+    #   DateFormat: "day"
+    #   daterange: "dd"
+    #   command: "activityreport" 
+    #   json: "1" 
+    #   tracker_login_id: "{{ config['tracker_login_id'] }}"
+ 
+  retriever:
+    type: SimpleRetriever
+    record_selector:
+      $ref: "#/definitions/selector"
+    paginator:
+      type: NoPagination
+    requester:
+      $ref: "#/definitions/requester"
+      
+  base_stream:
+    type: DeclarativeStream
+    retriever:
+      $ref: "#/definitions/retriever"
+    incremental_sync:
+      type: CustomIncrementalSync
+      class_name: sourcecustomcomponents.CustomDateTimeBasedCursor.CustomDateTimeBasedCursor
+      start_datetime:
+        datetime: "{{ config['fromdate'] }}"
+        datetime_format: "%Y-%m-%d"
+      end_datetime:
+        datetime: "{{ now_utc() }}"
+        datetime_format: "%Y-%m-%d %H:%M:%S.%f+00:00"
+      step: "P1D"
+      datetime_format: "%Y-%m-%d"
+      cursor_granularity: "P1D"
+      cursor_field: "date"
+      recovery_dates: "{{ config['recovery_dates_dynamic_variables_report_stream'] }}"
+   
+  dynamic_variables_report_stream:
+    $ref: "#/definitions/base_stream"
+    name: "dynamic_variables_report_stream"
+    $parameters:
+      path: "/api/"
+    transformations:
+      - type: AddFields
+        fields:
+          - path: [ "date" ]
+            value: "{{ (stream_slice['start_time']) }}"
+
+  reg_selector:
+    type: RecordSelector
+    extractor:
+      type: CustomRecordExtractor
+      class_name: sourcecustomcomponents.CustomRecordExtractor.CustomRecordExtractor
+      field_path: [ "registrations" ]
+
+  reg_requester:
+    type: CustomRequester
+    class_name: sourcecustomcomponents.CustomRequester.CustomRequester_cellxpert_registrations
+
+    url_base: "abc.com"
+  
+  ftd_reg_requester:
+    type: CustomRequester
+    class_name: sourcecustomcomponents.CustomRequester.CustomRequester_cellxpert_ftd_registrations
+
+    url_base: "abc.com"
+    # http_method: "GET"
+    # request_parameters:
+    #   api_username: "{{ config['api_username'] }}"
+    #   api_password: "{{ config['api_password'] }}" 
+    #   fromdate: "{{ stream_slice['start_time'] }}"
+    #   todate: "{{ stream_slice['start_time'] }}"
+    #   DateFormat: "day"
+    #   daterange: "dd"
+    #   command: "registrations" 
+    #   json: "1" 
+    #   tracker_login_id: "{{ config['tracker_login_id'] }}" 
+
+      
+  reg_retriever:
+    type: SimpleRetriever
+    record_selector:
+      $ref: "#/definitions/reg_selector"
+    paginator:
+      type: NoPagination
+    requester:
+      $ref: "#/definitions/reg_requester"
+
+  ftd_reg_retriever:
+    type: SimpleRetriever
+    record_selector:
+      $ref: "#/definitions/reg_selector"
+    paginator:
+      type: NoPagination
+    requester:
+      $ref: "#/definitions/ftd_reg_requester"
+
+  reg_base_stream:
+    type: DeclarativeStream
+    retriever:
+      $ref: "#/definitions/reg_retriever"
+    incremental_sync:
+      type: CustomIncrementalSync
+      class_name: sourcecustomcomponents.CustomDateTimeBasedCursor.CustomDateTimeBasedCursor
+      start_datetime:
+        datetime: "{{ config['fromdate'] }}"
+        datetime_format: "%Y-%m-%d"
+      end_datetime:
+        datetime: "{{ now_utc() }}"
+        datetime_format: "%Y-%m-%d %H:%M:%S.%f+00:00"
+      step: "P1D"
+      datetime_format: "%Y-%m-%d"
+      cursor_granularity: "P1D"
+      cursor_field: "date"   
+      recovery_dates: "{{ config['recovery_dates_registration_report_stream'] }}"
+  ftd_reg_base_stream:
+    type: DeclarativeStream
+    retriever:
+      $ref: "#/definitions/ftd_reg_retriever"
+    incremental_sync:
+      type: CustomIncrementalSync
+      class_name: sourcecustomcomponents.CustomDateTimeBasedCursor.CustomDateTimeBasedCursor
+      start_datetime:
+        datetime: "{{ config['fromdate'] }}"
+        datetime_format: "%Y-%m-%d"
+      end_datetime:
+        datetime: "{{ now_utc() }}"
+        datetime_format: "%Y-%m-%d %H:%M:%S.%f+00:00"
+      step: "P1D"
+      datetime_format: "%Y-%m-%d"
+      cursor_granularity: "P1D"
+      cursor_field: "date"   
+      recovery_dates: "{{ config['recovery_dates_ftd_registration_report_stream'] }}"
+
+  registration_report_stream:
+    $ref: "#/definitions/reg_base_stream"
+    name: "registration_report_stream"
+    primary_key: [ "date","tracker_login_id" ]
+    $parameters:
+      path: "/api/"
+    transformations:
+      - type: AddFields
+        fields:
+          - path: [ "date" ]
+            value: "{{ stream_slice[ 'start_time' ] }}"
+  ftd_registration_report_stream:
+    $ref: "#/definitions/ftd_reg_base_stream"
+    name: "ftd_registration_report_stream"
+    primary_key: [ "date","tracker_login_id" ]
+    $parameters:
+      path: "/api/"
+    transformations:
+      - type: AddFields
+        fields:
+          - path: [ "date" ]
+            value: "{{ stream_slice[ 'start_time' ] }}"
+streams:
+  - "#/definitions/dynamic_variables_report_stream"
+  - "#/definitions/registration_report_stream"
+  - "#/definitions/ftd_registration_report_stream"
+
+check:
+  type: CheckStream
+  stream_names:
+    - "dynamic_variables_report_stream"
+    - "registration_report_stream"
+    - "ftd_registration_report_stream"
+
+spec:
+  type: Spec
+  documentation_url: https://docs.airbyte.com/integrations/sources/cellxpert-yaml
+  connection_specification:
+    $schema: http://json-schema.org/draft-07/schema#
+    title: Cellxpert Spec
+    type: object
+    required:
+      - api_username
+      - api_password
+      - fromdate
+      - tracker_login_id
+      - base_url
+    # additionalProperties: true
+    properties:
+      base_url:
+        type: string
+        description: cellxpert base url
+        order: 1
+      # 'TODO: This schema defines the configuration required for the source. This usually involves metadata such as database and/or authentication information.':
+      api_username:
+        type: string
+        description: API Username
+        order: 2
+      api_password:
+        type: string
+        description: API Password
+        airbyte_secret: true
+        order: 3
+      fromdate:
+        type: string
+        description: from date
+        order: 4
+      tracker_login_id:
+        type: string
+        description: BRC tracker login ID
+        order: 5
+      loopback_days:
+        type: number
+        description: number of lookback_days, default is 10 days
+        order: 6
+      recovery_dates_dynamic_variables_report_stream:
+        type: string
+        description: list of recovery dates comma separated
+        order: 7
+      recovery_dates_registration_report_stream:
+        type: string
+        description: list of recovery dates comma separated
+        order: 8
+      recovery_dates_ftd_registration_report_stream:
+        type: string
+        description: list of recovery dates comma separated
+        order: 9
+      is_recovery:
+        type: boolean
+        description: check recovery 
+        order: 10

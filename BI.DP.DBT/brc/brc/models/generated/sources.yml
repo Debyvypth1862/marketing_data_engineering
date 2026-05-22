@@ -1,0 +1,2161 @@
+version: 2
+sources:
+- name: BRC
+  database: "{{ env_var('snowflake_db_dbt') }}"
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+  - name: _AIRBYTE_RAW_POSTBACK_TRACKING_BACKUP
+  - name: _AIRBYTE_RAW_ADMINS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/admins/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADMIN_LOGINS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/admin_logins/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADVERTISERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/advertisers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADVERTISER_PAYERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/advertiser_payers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADVERTISER_PAYMENTS_DETAILS_PAID
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/advertiser_payments_details_paid/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADVERTISER_PAYMENTS_DETAILS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/advertiser_payments_details/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_ADVERTISER_PAYMENTS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/advertiser_payments/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_AFFILIATE_SYSTEMS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/affiliate_systems/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_API_ACCESS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/api_access/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_BRANDS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/brands/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGNS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaigns/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_DEALS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_deals/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_DEAL_REQUESTS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_deal_requests/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_MATERIALS_REQUEST_NEW
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_materials_request_new/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_MATERIALS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_materials/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_MATERIALS_USED
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_materials_used/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_PRODUCTS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_products/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_TRACKERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_trackers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CAMPAIGN_TRACKER_DEALS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/campaign_tracker_deals/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CLIENTAREA_STRINGS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/clientarea_strings/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CURRENCY_OLD_USD
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/currency_old_usd/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CURRENCY
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/currency/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_CUSTOM_TRACKER_DATA
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/custom_tracker_data/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_DAILY_STATS_TOTAL
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/daily_stats_total/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_EMAILS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/emails/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_EMAIL_SENDOUT_STATS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/email_sendout_stats/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_IMPORT_QUEUE
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/import_queue/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_IMPORT_STATUS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/import_status/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_IP_BLOCK
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/ip_block/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PAYMENTS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/payments/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PAYMENT_DETAILS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/payment_details/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PAYMENT_HISTORY
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/payment_history/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_3RD_PARTY_CLICK_LOG
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_3rd_party_click_log/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMMITTED_DATE
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: _AIRBYTE_EMITTED_AT
+        data_type: TIMESTAMP_TZ(9)
+        expression: "GET($1, '_airbyte_emitted_at')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_3RD_PARTY_LOG
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_3rd_party_log/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_3RD_PARTY_URLS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_3rd_party_urls/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_ADVERTISER_DOMAIN
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_advertiser_domain/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_DOMAINS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_domains/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_TRACKING
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_tracking/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMMITTED_DATE
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: _AIRBYTE_EMITTED_AT
+        data_type: TIMESTAMP_TZ(9)
+        expression: "GET($1, '_airbyte_emitted_at')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_MODIFIED_DATE_POSTBACK_TRACKING
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/modified_date_postback_tracking/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMMITTED_DATE
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      - name: _AIRBYTE_EMITTED_AT
+        data_type: TIMESTAMP_TZ(9)
+        expression: "GET($1, '_airbyte_emitted_at')"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+
+  - name: _AIRBYTE_RAW_POSTBACK_TRACKING_VALUES
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_tracking_values/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PROMOTIONS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/promotions/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PUBLISHERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/publishers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PUBLISHER_LOGINS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/publisher_domain/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PUBLISHER_MANAGERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/publisher_managers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PUBLISHER_NEWS_SEEN
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/publisher_news_seen/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_PUBLISHER_NEWS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/publisher_news/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_STATS_ERRORS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/stats_errors/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_SUB_PUBLISHERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/sub_publishers/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_TRACKER_DATA_BACKUP
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/tracker_data_backup/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_TRACKER_DATA
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/tracker_data/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_TRACKER_DATA_SUBID
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/tracker_data_subid/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_TRACKER_DATA_OLD
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/tracker_data_old/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_TRACKER_LOGINS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/tracker_logins/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_USERS
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/users/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+  - name: _AIRBYTE_RAW_POSTBACK_EXTRA_VARIABLES
+    external:
+      location: "@STG.BRC.S3_ESTG_BRC_JSON_FF"
+      pattern: "(?=.*/postback_extra_variables/)^.*"
+      file_format: "STG.BRC.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: TIMESTAMP_TZ(9)
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: "CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))"
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: "GET($1, '_airbyte_data')"
+      # - name: _AIRBYTE_EMITTED_AT
+      #   data_type: TIMESTAMP_TZ(9)
+      #   expression: "CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 1) AS TIMESTAMP_TZ(9))"
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: "METADATA$FILENAME"
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: "METADATA$FILE_ROW_NUMBER"
+      - name: PLATFORM_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 3)"
+      - name: OPERATOR_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 4)"
+      - name: ACCOUNT_NAME
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, '/', 5)"
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: "SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)"
+- name: PUBLIC
+  database: "{{ env_var('snowflake_db_dbt') }}"
+  tables:
+    - name: S3_FILES_STATS

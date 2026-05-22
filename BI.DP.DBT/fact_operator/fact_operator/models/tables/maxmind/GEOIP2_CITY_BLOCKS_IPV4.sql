@@ -1,0 +1,19 @@
+{{ config(
+    materialized = "table",
+    cluster_by = ["GEONAME_ID"],
+    database = env_var('RAW_DATABASE'),
+    schema = "MAXMIND"
+) }}
+SELECT
+  NETWORK
+  , GEONAME_ID
+  , REGISTERED_COUNTRY_GEONAME_ID
+  , REPRESENTED_COUNTRY_GEONAME_ID
+  , IS_ANONYMOUS_PROXY
+  , IS_SATELLITE_PROVIDER
+  , POSTAL_CODE
+  , LATITUDE
+  , LONGITUDE
+  , ACCURACY_RADIUS
+  , IS_ANYCAST
+FROM {{ source('MAXMIND', '_AIRBYTE_RAW_GEOIP2_CITY_BLOCKS_IPV4') }}

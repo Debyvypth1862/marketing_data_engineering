@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": ["null", "string"]
+    },
+    "tracker_login_id": {
+      "type": ["null", "string"]
+    },
+    "Channel": {
+      "type": ["null", "string"]
+    },
+    "Pay period": {
+      "type": ["null", "string"]
+    },
+    "Customer group": {
+      "type": ["null", "string"]
+    },
+    "Customer": {
+      "type": ["null", "string"]
+    },
+    "Payload": {
+      "type": ["null", "string"]
+    },
+    "Campaign group": {
+      "type": ["null", "string"]
+    },
+    "Campaign": {
+      "type": ["null", "string"]
+    },
+    "Media": {
+      "type": ["null", "string"]
+    },
+    "Impressions": {
+      "type": ["null", "string"]
+    },
+    "Clicks": {
+      "type": ["null", "string"]
+    },
+    "Signups": {
+      "type": ["null", "string"]
+    },
+    "FTD": {
+      "type": ["null", "string"]
+    },
+    "Deposits": {
+      "type": ["null", "string"]
+    },
+    "NDC": {
+      "type": ["null", "string"]
+    },
+    "Bonuses": {
+      "type": ["null", "string"]
+    },
+    "Qualified Players": {
+      "type": ["null", "string"]
+    },
+    
+    "Admin fee": {
+      "type": ["null", "string"]
+    },
+    
+    "Total Net Revenue": {
+      "type": ["null", "string"]
+    },
+    
+    "Income": {
+      "type": ["null", "string"]
+    }
+    
+  }
+}

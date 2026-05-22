@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": ["null", "string"]
+    },
+    "tracker_login_id": {
+      "type": ["null", "string"]
+    },
+    "report": {
+      "type": ["null", "string"]
+    },
+    "data": {
+      "type": ["null", "object"]
+    }
+  }
+}

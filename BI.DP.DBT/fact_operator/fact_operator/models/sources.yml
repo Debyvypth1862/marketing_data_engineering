@@ -1,0 +1,407 @@
+version: 2
+sources:
+- name: BRC
+  database: RAW
+  schema: BRC
+  tables:
+    - name: ADVERTISERS
+    - name: BRANDS
+    - name: CAMPAIGNS
+    - name: CAMPAIGN_TRACKERS
+    - name: POSTBACK_TRACKING
+    - name: PUBLISHERS
+    - name: TRACKER_LOGINS
+    - name: TRACKER_DATA
+    - name: POSTBACK_EXTRA_VARIABLES
+
+- name: NETREFER
+  quoting:
+    identifier: true
+  database: RAW
+  schema: NETREFER
+  tables:
+    - name: DYNAMIC_VARIABLES_REPORT
+    - name: LEOVEGAS_DYNAMIC_VARIABLE
+    - name: PLAYAMO_DYNAMIC_VARIABLE
+    - name: 7_STAR_DYNAMIC_VARIABLE
+      quoting:
+        identifier: true
+
+- name: CELLXPERT
+  database: RAW
+  schema: CELLXPERT
+  tables:
+    - name: REGISTRATION_REPORT
+    - name: DYNAMIC_VARIABLES_REPORT
+    - name: ICT_FTD_REGISTRATION_REPORT
+
+- name: BUFFALO_PARTNERS
+  database: RAW
+  schema: BUFFALO_PARTNERS
+  tables:
+    - name: REV_SHARE_REPORT
+
+- name: EGO
+  database: RAW
+  schema: EGO
+  tables:
+    - name: BRAND_REPORT
+
+- name: INCOME_ACCESS
+  database: RAW
+  schema: INCOME_ACCESS
+  tables:
+    - name: ACCOUNT_REPORT
+    - name: ACID_REPORT
+
+- name: MEXOS
+  database: RAW
+  schema: MEXOS
+  tables:
+    - name: STATISTICS_REPORT
+
+- name: MYAFFILIATES
+  database: RAW
+  schema: MYAFFILIATES
+  tables:
+    - name: CUSTOMER_REPORT
+
+- name: AFFTECH
+  database: RAW
+  schema: AFFTECH
+  tables:
+    - name: AFFILIATE_STATISTICS_REPORTS
+
+- name: REFERON
+  database: RAW
+  schema: REFERON
+  tables:
+    - name: DYNAMIC_VARIABLES_REPORT
+
+- name: SMARTICO
+  database: RAW
+  schema: SMARTICO
+  tables:
+    - name: UTM_CODE_REPORT
+
+- name: Q_PLATFORM
+  database: RAW
+  schema: Q_PLATFORM
+  tables:
+    - name: UTM_CODE_REPORT
+
+- name: SOFTSWISS
+  database: RAW
+  schema: SOFTSWISS
+  tables:
+    - name: ACTIVITY_REPORT
+
+- name: BRT
+  database: RAW
+  schema: BRT
+  tables:
+    - name: CURRENCIES
+    - name: CURRENCY_OPERATOR_ACCOUNT
+    - name: OPERATOR_ACCOUNTS
+    - name: OPERATOR_OPERATOR_PLATFORM
+    - name: OPERATOR_PLATFORMS
+  
+- name: EXP_PUBLIC
+  database: EXP
+  schema: PUBLIC
+  tables:
+    - name: DIM_COUNTRY
+
+- name: PUBLIC
+  database: "{{ env_var('snowflake_db_dbt') }}"
+  tables:
+    - name: S3_FILES_STATS
+
+- name: APILAYER
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+  - name: _AIRBYTE_RAW_EUR_HISTORICAL
+    external:
+      location: "@STG.APILAYER.S3_ESTG_APILAYER_JSON_FF"
+      pattern: "(?=.*/eur_historical/)^.*"
+      file_format: "STG.APILAYER.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: GET($1, '_airbyte_data')
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: METADATA$FILENAME
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: METADATA$FILE_ROW_NUMBER
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)
+  - name: _AIRBYTE_RAW_USD_HISTORICAL
+    external:
+      location: "@STG.APILAYER.S3_ESTG_APILAYER_JSON_FF"
+      pattern: "(?=.*/usd_historical/)^.*"
+      file_format: "STG.APILAYER.JSON_FF"
+      auto_refresh: false
+      refresh_on_create: false
+      partitions:
+        - name: _AIRBYTE_EMITTED_AT
+          data_type: date
+          expression: CAST(SPLIT_PART(SPLIT_PART(METADATA$FILENAME, '/', -1), '_', 2) AS DATE)
+    columns:
+      - name: _AIRBYTE_AB_ID
+        data_type: VARCHAR(16777216)
+        expression: CAST(GET($1, '_airbyte_ab_id') AS VARCHAR(16777216))
+      - name: _AIRBYTE_DATA
+        data_type: VARCHAR(16777216)
+        expression: GET($1, '_airbyte_data')
+      - name: FILE_NAME
+        data_type: VARCHAR(16777216)
+        expression: METADATA$FILENAME
+      - name: FILE_ROW_NUMBER
+        data_type: NUMBER(38,0)
+        expression: METADATA$FILE_ROW_NUMBER
+      - name: S3_PATH
+        data_type: VARCHAR(16777216)
+        expression: SPLIT_PART(METADATA$FILENAME, 'raw_data/', -1)
+
+
+- name: MAXMIND
+  quoting:
+    database: true
+    schema: false
+    identifier: false
+  tables:
+  - name: _AIRBYTE_RAW_GEOIP2_CITY_LOCATIONS
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-City-Locations-en.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c1::FLOAT
+      - name: LOCALE_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c2::VARCHAR(16777216)
+      - name: CONTINENT_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c3::VARCHAR(16777216)
+      - name: CONTINENT_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c4::VARCHAR(16777216)
+      - name: COUNTRY_ISO_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c5::VARCHAR(16777216)
+      - name: COUNTRY_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c6::VARCHAR(16777216)
+      - name: SUBDIVISION_1_ISO_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c7::VARCHAR(16777216)
+      - name: SUBDIVISION_1_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c8::VARCHAR(16777216)
+      - name: SUBDIVISION_2_ISO_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c9::VARCHAR(16777216)
+      - name: SUBDIVISION_2_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c10::VARCHAR(16777216)
+      - name: CITY_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c11::VARCHAR(16777216)
+      - name: METRO_CODE
+        data_type: FLOAT
+        expression: value:c12::FLOAT
+      - name: TIME_ZONE
+        data_type: VARCHAR(16777216)
+        expression: value:c13::VARCHAR(16777216)
+      - name: IS_IN_EUROPEAN_UNION
+        data_type: FLOAT
+        expression: value:c14::FLOAT
+  - name: _AIRBYTE_RAW_GEOIP2_CITY_BLOCKS_IPV4
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-City-Blocks-IPv4.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: NETWORK
+        data_type: VARCHAR(16777216)
+        expression: value:c1::VARCHAR(16777216)
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c2::FLOAT
+      - name: REGISTERED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c3::FLOAT
+      - name: REPRESENTED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c4::FLOAT
+      - name: IS_ANONYMOUS_PROXY
+        data_type: FLOAT
+        expression: value:c5::FLOAT
+      - name: IS_SATELLITE_PROVIDER
+        data_type: FLOAT
+        expression: value:c6::FLOAT
+      - name: POSTAL_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c7::VARCHAR(16777216)
+      - name: LATITUDE
+        data_type: FLOAT
+        expression: value:c8::FLOAT
+      - name: LONGITUDE
+        data_type: FLOAT
+        expression: value:c9::FLOAT
+      - name: ACCURACY_RADIUS
+        data_type: FLOAT
+        expression: value:c10::FLOAT
+      - name: IS_ANYCAST
+        data_type: FLOAT
+        expression: value:c11::FLOAT
+  - name: _AIRBYTE_RAW_GEOIP2_CITY_BLOCKS_IPV6
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-City-Blocks-IPv6.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: NETWORK
+        data_type: VARCHAR(16777216)
+        expression: value:c1::VARCHAR(16777216)
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c2::FLOAT
+      - name: REGISTERED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c3::FLOAT
+      - name: REPRESENTED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c4::FLOAT
+      - name: IS_ANONYMOUS_PROXY
+        data_type: FLOAT
+        expression: value:c5::FLOAT
+      - name: IS_SATELLITE_PROVIDER
+        data_type: FLOAT
+        expression: value:c6::FLOAT
+      - name: POSTAL_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c7::VARCHAR(16777216)
+      - name: LATITUDE
+        data_type: FLOAT
+        expression: value:c8::FLOAT
+      - name: LONGITUDE
+        data_type: FLOAT
+        expression: value:c9::FLOAT
+      - name: ACCURACY_RADIUS
+        data_type: FLOAT
+        expression: value:c10::FLOAT
+      - name: IS_ANYCAST
+        data_type: FLOAT
+        expression: value:c11::FLOAT
+  - name: _AIRBYTE_RAW_GEOIP2_COUNTRY
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-Country-Locations-en.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c1::FLOAT
+      - name: LOCALE_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c2::VARCHAR(16777216)
+      - name: CONTINENT_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c3::VARCHAR(16777216)
+      - name: CONTINENT_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c4::VARCHAR(16777216)
+      - name: COUNTRY_ISO_CODE
+        data_type: VARCHAR(16777216)
+        expression: value:c5::VARCHAR(16777216)
+      - name: COUNTRY_NAME
+        data_type: VARCHAR(16777216)
+        expression: value:c6::VARCHAR(16777216)
+      - name: IS_IN_EUROPEAN_UNION
+        data_type: FLOAT
+        expression: value:c7::FLOAT
+  - name: _AIRBYTE_RAW_GEOIP2_COUNTRY_BLOCKS_IPV4
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-Country-Blocks-IPv4.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: NETWORK
+        data_type: VARCHAR(16777216)
+        expression: value:c1::VARCHAR(16777216)
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c2::FLOAT
+      - name: REGISTERED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c3::FLOAT
+      - name: REPRESENTED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c4::FLOAT
+      - name: IS_ANONYMOUS_PROXY
+        data_type: FLOAT
+        expression: value:c5::FLOAT
+      - name: IS_SATELLITE_PROVIDER
+        data_type: FLOAT
+        expression: value:c6::FLOAT
+      - name: IS_ANYCAST
+        data_type: FLOAT
+        expression: value:c7::FLOAT
+  - name: _AIRBYTE_RAW_GEOIP2_COUNTRY_BLOCKS_IPV6
+    external:
+      location: "@STG.MAXMIND.S3_ESTG_MAXMIND_CSV_FF"
+      pattern: ".*GeoIP2-Country-Blocks-IPv6.csv"
+      file_format: "STG.MAXMIND.CSV_FF"
+      auto_refresh: false
+      refresh_on_create: false
+    columns:
+      - name: NETWORK
+        data_type: VARCHAR(16777216)
+        expression: value:c1::VARCHAR(16777216)
+      - name: GEONAME_ID
+        data_type: FLOAT
+        expression: value:c2::FLOAT
+      - name: REGISTERED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c3::FLOAT
+      - name: REPRESENTED_COUNTRY_GEONAME_ID
+        data_type: FLOAT
+        expression: value:c4::FLOAT
+      - name: IS_ANONYMOUS_PROXY
+        data_type: FLOAT
+        expression: value:c5::FLOAT
+      - name: IS_SATELLITE_PROVIDER
+        data_type: FLOAT
+        expression: value:c6::FLOAT
+      - name: IS_ANYCAST
+        data_type: FLOAT
+        expression: value:c7::FLOAT
+

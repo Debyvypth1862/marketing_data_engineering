@@ -1,0 +1,202 @@
+{
+    "streams": [
+        {
+            "stream": {
+                "name": "activity_report",
+                "json_schema": {
+                    "type": "object",
+                        "title": "Generated schema for Root",
+                        "$schema": "http://json-schema.org/draft-07/schema#",
+                        "required": [
+                            "report_type",
+                            "rows",
+                            "totals",
+                            "relations",
+                            "current_page",
+                            "total_pages",
+                            "current_per_page",
+                            "total_count"
+                        ],
+                        "properties": {
+                            "date": {
+                                "type": "string"
+                            },
+                            "rows": {
+                                "type": "object",
+                                "required": [
+                                    "data"
+                                ],
+                                "properties": {
+                                    "data": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "name",
+                                                    "value",
+                                                    "type"
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "totals": {
+                                "type": "object",
+                                "required": [
+                                    "data"
+                                ],
+                                "properties": {
+                                    "data": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "name",
+                                                    "value",
+                                                    "type"
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "end_date": {
+                                "type": "string"
+                            },
+                            "relations": {
+                                "type": "object",
+                                "required": [
+                                    "campaigns",
+                                    "promos",
+                                    "brands",
+                                    "partners",
+                                    "dedicated_operators"
+                                ],
+                                "properties": {
+                                    "brands": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "name"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "promos": {
+                                        "type": "array",
+                                        "items": {}
+                                    },
+                                    "partners": {
+                                        "type": "array",
+                                        "items": {}
+                                    },
+                                    "campaigns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "name",
+                                                "strategy"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "strategy": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "dedicated_operators": {
+                                        "type": "array",
+                                        "items": {}
+                                    }
+                                }
+                            },
+                            "start_date": {
+                                "type": "string"
+                            },
+                            "report_type": {
+                                "type": "string"
+                            },
+                            "total_count": {
+                                "type": "number"
+                            },
+                            "total_pages": {
+                                "type": "number"
+                            },
+                            "current_page": {
+                                "type": "number"
+                            },
+                            "current_per_page": {
+                                "type": "number"
+                            },
+                            "tracker_login_id": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                "supported_sync_modes": [
+                    "full_refresh",
+                    "incremental"
+                ],
+                "source_defined_cursor": true,
+                "default_cursor_field": [
+                    "date"
+                ],
+                "source_defined_primary_key": [],
+                "namespace": "SOFTSWISS"
+            },
+            "sync_mode": "incremental",
+            "cursor_field": [
+                "date"
+            ],
+            "destination_sync_mode": "append_dedup",
+            "primary_key": [
+                [
+                    "date"
+                ],
+                [
+                    "tracker_login_Id"
+                ]
+            ]
+        }
+    ]
+}

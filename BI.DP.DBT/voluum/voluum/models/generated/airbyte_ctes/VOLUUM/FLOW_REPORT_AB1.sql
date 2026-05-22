@@ -1,0 +1,85 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "VOLUUM",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to parse JSON blob stored in a single column and extract into separated field columns as described by the JSON Schema
+-- depends_on: {{ source('VOLUUM', '_AIRBYTE_RAW_FLOW_REPORT') }}
+WITH s3_status AS (
+    SELECT PATH, IS_PROCESSED, PICKED_FOR_REPROCESS
+    FROM {{ source('PUBLIC', 'S3_FILES_STATS') }} 
+)
+select 
+    {{ json_extract_scalar('_airbyte_data', ['actions'], ['actions']) }} as ACTIONS,
+    {{ json_extract_scalar('_airbyte_data', ['ap'], ['ap']) }} as AP,
+    {{ json_extract_scalar('_airbyte_data', ['clicks'], ['clicks']) }} as CLICKS,
+    {{ json_extract_scalar('_airbyte_data', ['conversions'], ['conversions']) }} as CONVERSIONS,
+    {{ json_extract_scalar('_airbyte_data', ['cost'], ['cost']) }} as COST,
+    {{ json_extract_scalar('_airbyte_data', ['costSources'], ['costSources']) }} as COST_SOURCES,
+    {{ json_extract_scalar('_airbyte_data', ['cpv'], ['cpv']) }} as CPV,
+    {{ json_extract_scalar('_airbyte_data', ['cr'], ['cr']) }} as CR,
+    {{ json_extract_scalar('_airbyte_data', ['ctr'], ['ctr']) }} as CTR,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions1'], ['customConversions1']) }} as CUSTOM_CONVERSIONS_1,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions2'], ['customConversions2']) }} as CUSTOM_CONVERSIONS_2,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions3'], ['customConversions3']) }} as CUSTOM_CONVERSIONS_3,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions4'], ['customConversions4']) }} as CUSTOM_CONVERSIONS_4,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions5'], ['customConversions5']) }} as CUSTOM_CONVERSIONS_5,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions6'], ['customConversions6']) }} as CUSTOM_CONVERSIONS_6,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions7'], ['customConversions7']) }} as CUSTOM_CONVERSIONS_7,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions8'], ['customConversions8']) }} as CUSTOM_CONVERSIONS_8,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions9'], ['customConversions9']) }} as CUSTOM_CONVERSIONS_9,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions10'], ['customConversions10']) }} as CUSTOM_CONVERSIONS_10,
+    {{ json_extract_scalar('_airbyte_data', ['customConversions11'], ['customConversions11']) }} as CUSTOM_CONVERSIONS_11,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue1'], ['customRevenue1']) }} as CUSTOM_REVENUE_1,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue2'], ['customRevenue2']) }} as CUSTOM_REVENUE_2,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue3'], ['customRevenue3']) }} as CUSTOM_REVENUE_3,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue4'], ['customRevenue4']) }} as CUSTOM_REVENUE_4,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue5'], ['customRevenue5']) }} as CUSTOM_REVENUE_5,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue6'], ['customRevenue6']) }} as CUSTOM_REVENUE_6,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue7'], ['customRevenue7']) }} as CUSTOM_REVENUE_7,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue8'], ['customRevenue8']) }} as CUSTOM_REVENUE_8,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue9'], ['customRevenue9']) }} as CUSTOM_REVENUE_9,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue10'], ['customRevenue10']) }} as CUSTOM_REVENUE_10,
+    {{ json_extract_scalar('_airbyte_data', ['customRevenue11'], ['customRevenue11']) }} as CUSTOM_REVENUE_11,
+    {{ json_extract_scalar('_airbyte_data', ['cv'], ['cv']) }} as CV,
+    {{ json_extract_scalar('_airbyte_data', ['CVR'], ['CVR']) }} as CVR,
+    {{ json_extract_scalar('_airbyte_data', ['date'], ['date']) }} as DATE,
+    {{ json_extract_scalar('_airbyte_data', ['deleted'], ['deleted']) }} as DELETED,
+    {{ json_extract_scalar('_airbyte_data', ['ecpa'], ['ecpa']) }} as ECPA,
+    {{ json_extract_scalar('_airbyte_data', ['ecpc'], ['ecpc']) }} as ECPC,
+    {{ json_extract_scalar('_airbyte_data', ['ecpm'], ['ecpm']) }} as ECPM,
+    {{ json_extract_scalar('_airbyte_data', ['epc'], ['epc']) }} as EPC,
+    {{ json_extract_scalar('_airbyte_data', ['epv'], ['epv']) }} as EPV,
+    {{ json_extract_scalar('_airbyte_data', ['errors'], ['errors']) }} as ERRORS,
+    {{ json_extract_scalar('_airbyte_data', ['flowId'], ['flowId']) }} as FLOW_ID,
+    {{ json_extract_scalar('_airbyte_data', ['flowName'], ['flowName']) }} as FLOW_NAME,
+    {{ json_extract_scalar('_airbyte_data', ['flowWorkspaceName'], ['flowWorkspaceName']) }} as FLOW_WORKSPACE_NAME,
+    {{ json_extract_scalar('_airbyte_data', ['ictr'], ['ictr']) }} as ICTR,
+    {{ json_extract_scalar('_airbyte_data', ['impressions'], ['impressions']) }} as IMPRESSIONS,
+    {{ json_extract_scalar('_airbyte_data', ['mtti'], ['mtti']) }} as MTTI,
+    {{ json_extract_scalar('_airbyte_data', ['profit'], ['profit']) }} as PROFIT,
+    {{ json_extract_scalar('_airbyte_data', ['readOnly'], ['readOnly']) }} as READ_ONLY,
+    {{ json_extract_scalar('_airbyte_data', ['revenue'], ['revenue']) }} as REVENUE,
+    {{ json_extract_scalar('_airbyte_data', ['roi'], ['roi']) }} as ROI,
+    {{ json_extract_scalar('_airbyte_data', ['rpm'], ['rpm']) }} as RPM,
+    {{ json_extract_scalar('_airbyte_data', ['suspiciousClicks'], ['suspiciousClicks']) }} as SUSPICIOUS_CLICKS,
+    {{ json_extract_scalar('_airbyte_data', ['suspiciousClicksPercentage'], ['suspiciousClicksPercentage']) }} as SUSPICIOUS_CLICKS_PERCENTAGE,
+    {{ json_extract_scalar('_airbyte_data', ['suspiciousVisits'], ['suspiciousVisits']) }} as SUSPICIOUS_VISITS,
+    {{ json_extract_scalar('_airbyte_data', ['suspiciousVisitsPercentage'], ['suspiciousVisitsPercentage']) }} as SUSPICIOUS_VISITS_PERCENTAGE,
+    {{ json_extract_scalar('_airbyte_data', ['timeToInstallRange0'], ['timeToInstallRange0']) }} as TIME_TO_INSTALL_RANGE_0,
+    {{ json_extract_scalar('_airbyte_data', ['timeToInstallRange1'], ['timeToInstallRange1']) }} as TIME_TO_INSTALL_RANGE_1,
+    {{ json_extract_scalar('_airbyte_data', ['timeToInstallRange2'], ['timeToInstallRange2']) }} as TIME_TO_INSTALL_RANGE_2,
+    {{ json_extract_scalar('_airbyte_data', ['uniqueClicks'], ['uniqueClicks']) }} as UNIQUE_CLICKS,
+    {{ json_extract_scalar('_airbyte_data', ['uniqueVisits'], ['uniqueVisits']) }} as UNIQUE_VISITS,
+    {{ json_extract_scalar('_airbyte_data', ['visits'], ['visits']) }} as VISITS,
+    _AIRBYTE_AB_ID,
+	_AIRBYTE_EMITTED_AT,
+    S3_PATH,
+	{{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT
+from {{ source('VOLUUM', '_AIRBYTE_RAW_FLOW_REPORT') }} as table_alias
+JOIN s3_status s3
+    ON table_alias.S3_PATH = s3.PATH
+
+WHERE s3.IS_PROCESSED = FALSE AND s3.PICKED_FOR_REPROCESS = FALSE
+{{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}

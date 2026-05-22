@@ -1,0 +1,22 @@
+{{ config(
+    materialized = "table",
+    cluster_by = ["GEONAME_ID"],
+    database = env_var('RAW_DATABASE'),
+    schema = "MAXMIND"
+) }}
+SELECT
+  GEONAME_ID
+  , LOCALE_CODE
+  , CONTINENT_CODE
+  , CONTINENT_NAME
+  , COUNTRY_ISO_CODE
+  , COUNTRY_NAME
+  , SUBDIVISION_1_ISO_CODE
+  , SUBDIVISION_1_NAME
+  , SUBDIVISION_2_ISO_CODE
+  , SUBDIVISION_2_NAME
+  , CITY_NAME
+  , METRO_CODE
+  , TIME_ZONE
+  , IS_IN_EUROPEAN_UNION
+FROM {{ source('MAXMIND', '_AIRBYTE_RAW_GEOIP2_CITY_LOCATIONS') }}

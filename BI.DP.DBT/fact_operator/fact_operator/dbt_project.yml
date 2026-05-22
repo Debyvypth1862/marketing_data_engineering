@@ -1,0 +1,48 @@
+name: airbyte_utils
+version: '1.0'
+config-version: 2
+profile: FACT_OPERATOR
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+target-path: ../build
+log-path: ../logs
+packages-install-path: ../dbt
+clean-targets:
+- build
+- dbt_modules
+quoting:
+  database: true
+  schema: false
+  identifier: true
+models:
+  +transient: false
+  airbyte_utils:
+    +materialized: table
+    ctes:
+      +tags: internal_cte
+      +materialized: ephemeral
+    incremental:
+      +tags: incremental_tables
+      +materialized: incremental
+      +on_schema_change: sync_all_columns
+    tables:
+      +tags: normalized_tables
+      +materialized: table
+    views:
+      +tags: internal_views
+      +materialized: view
+dispatch:
+- macro_namespace: dbt_utils
+  search_order:
+  - airbyte_utils
+  - dbt_utils

@@ -1,0 +1,24 @@
+config:
+  partial_parse: true
+  printer_width: 120
+  send_anonymous_usage_stats: false
+  use_colors: true
+funnel_io:
+  outputs:
+    prod:
+      account: "{{ env_var('DBT_ACCOUNT') }}"
+      client_session_keep_alive: false
+      connect_retries: 3
+      connect_timeout: 15
+      database: "{{ env_var('DBT_DATABASE') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      query_tag: normalization
+      retry_all: true
+      retry_on_database_errors: true
+      role: "{{ env_var('DBT_ROLE') }}"
+      schema: FUNNEL_IO
+      threads: 5
+      type: snowflake
+      user: "{{ env_var('DBT_USER') }}"
+      warehouse: "{{ env_var('DBT_WAREHOUSE') }}"
+  target: prod

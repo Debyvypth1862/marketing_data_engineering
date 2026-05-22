@@ -1,0 +1,54 @@
+version: 2
+
+sources:
+  - name: BRC
+    database: RAW
+    schema: BRC
+    tables:
+      - name: POSTBACK_TRACKING
+      - name: CAMPAIGN_TRACKERS
+      - name: CAMPAIGNS
+      - name: BRANDS
+      - name: TRACKER_LOGINS
+      - name: PUBLISHERS
+      - name: ADVERTISERS
+
+  - name: EXP_PUBLIC
+    database: EXP
+    schema: PUBLIC
+    tables:
+      - name: DIM_PLAYER_LOCATION
+      - name: DIM_COUNTRY
+      - name: FACT_OPERATOR_AGG
+      - name: FACT_OFFER
+
+  - name: RAW_APILAYER
+    database: RAW
+    schema: APILAYER
+    tables:
+      - name: TO_EUR_HISTORICAL
+
+  - name: REDTRACK
+    database: RAW
+    schema: REDTRACK
+    tables:
+      - name: CONVERSIONS
+
+  - name: VOLUUM
+    database: RAW
+    schema: VOLUUM
+    tables:
+      - name: CONVERSIONS
+
+  - name: STREAMIA_SOURCE
+    database: RAW
+    schema: STREAMIA
+    tables:
+      - name: UTM_CODE_REPORT
+      - name: CAMPAIGN_REVENUE_REPORT
+
+  - name: REFERON
+    database: RAW
+    schema: REFERON
+    tables:
+      - name: DYNAMIC_VARIABLES_REPORT

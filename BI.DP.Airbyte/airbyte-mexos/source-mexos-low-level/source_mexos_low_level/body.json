@@ -1,0 +1,1988 @@
+{
+    "report": {
+        "campaignId": "7057",
+        "input": [
+            {
+                "name": "statDate",
+                "label": "Stat Date",
+                "type": "dateRange",
+                "required": true,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": "yyyy-MM-dd",
+                "jsDateTimeFormat": "yy-mm-dd",
+                "precision": 3,
+                "value": "custom",
+                "values": [],
+                "sublist": [
+                    {
+                        "name": "statDate_list",
+                        "label": null,
+                        "type": "list",
+                        "required": true,
+                        "collapsed": false,
+                        "filter": true,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": null,
+                        "value": "today",
+                        "values": [
+                            {
+                                "id": "custom",
+                                "name": null
+                            },
+                            {
+                                "id": "today",
+                                "name": null
+                            },
+                            {
+                                "id": "yesterday",
+                                "name": null
+                            },
+                            {
+                                "id": "currweek",
+                                "name": null
+                            },
+                            {
+                                "id": "prev7days",
+                                "name": null
+                            },
+                            {
+                                "id": "prevweek",
+                                "name": null
+                            },
+                            {
+                                "id": "currmonth",
+                                "name": null
+                            },
+                            {
+                                "id": "prev30days",
+                                "name": null
+                            },
+                            {
+                                "id": "prevmonth",
+                                "name": null
+                            },
+                            {
+                                "id": "threemonths",
+                                "name": null
+                            },
+                            {
+                                "id": "prev90days",
+                                "name": null
+                            },
+                            {
+                                "id": "sixmonths",
+                                "name": null
+                            },
+                            {
+                                "id": "prev180days",
+                                "name": null
+                            },
+                            {
+                                "id": "curryear",
+                                "name": null
+                            },
+                            {
+                                "id": "prev365days",
+                                "name": null
+                            },
+                            {
+                                "id": "prevyear",
+                                "name": null
+                            }
+                        ],
+                        "sublist": []
+                    },
+                    {
+                        "name": "statDate_from",
+                        "label": null,
+                        "type": "date",
+                        "required": true,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": "yyyy-MM-dd",
+                        "jsDateTimeFormat": "yy-mm-dd",
+                        "precision": null,
+                        "value": "2023-08-01",
+                        "values": [],
+                        "sublist": []
+                    },
+                    {
+                        "name": "statDate_to",
+                        "label": null,
+                        "type": "date",
+                        "required": true,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": "yyyy-MM-dd",
+                        "jsDateTimeFormat": "yy-mm-dd",
+                        "precision": null,
+                        "value": "2023-08-10",
+                        "values": [],
+                        "sublist": []
+                    }
+                ]
+            },
+            {
+                "name": "PlayersInformation",
+                "label": "Players Information",
+                "type": "set",
+                "required": false,
+                "collapsed": true,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": null,
+                "value": null,
+                "values": [],
+                "sublist": [
+                    {
+                        "name": "playerCountryCode",
+                        "label": "player Country",
+                        "type": "list",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [
+                            {
+                                "id": "AF",
+                                "name": "AFGHANISTAN"
+                            },
+                            {
+                                "id": "AX",
+                                "name": "ÅLAND ISLANDS"
+                            },
+                            {
+                                "id": "AL",
+                                "name": "ALBANIA"
+                            },
+                            {
+                                "id": "DZ",
+                                "name": "ALGERIA"
+                            },
+                            {
+                                "id": "AS",
+                                "name": "AMERICAN SAMOA"
+                            },
+                            {
+                                "id": "AD",
+                                "name": "ANDORRA"
+                            },
+                            {
+                                "id": "AO",
+                                "name": "ANGOLA"
+                            },
+                            {
+                                "id": "AI",
+                                "name": "ANGUILLA"
+                            },
+                            {
+                                "id": "AQ",
+                                "name": "ANTARCTICA"
+                            },
+                            {
+                                "id": "AG",
+                                "name": "ANTIGUA AND BARBUDA"
+                            },
+                            {
+                                "id": "AR",
+                                "name": "ARGENTINA"
+                            },
+                            {
+                                "id": "AM",
+                                "name": "ARMENIA"
+                            },
+                            {
+                                "id": "AW",
+                                "name": "ARUBA"
+                            },
+                            {
+                                "id": "AU",
+                                "name": "AUSTRALIA"
+                            },
+                            {
+                                "id": "AT",
+                                "name": "AUSTRIA"
+                            },
+                            {
+                                "id": "AZ",
+                                "name": "AZERBAIJAN"
+                            },
+                            {
+                                "id": "BS",
+                                "name": "BAHAMAS"
+                            },
+                            {
+                                "id": "BH",
+                                "name": "BAHRAIN"
+                            },
+                            {
+                                "id": "BD",
+                                "name": "BANGLADESH"
+                            },
+                            {
+                                "id": "BB",
+                                "name": "BARBADOS"
+                            },
+                            {
+                                "id": "BY",
+                                "name": "BELARUS"
+                            },
+                            {
+                                "id": "BE",
+                                "name": "BELGIUM"
+                            },
+                            {
+                                "id": "BZ",
+                                "name": "BELIZE"
+                            },
+                            {
+                                "id": "BJ",
+                                "name": "BENIN"
+                            },
+                            {
+                                "id": "BM",
+                                "name": "BERMUDA"
+                            },
+                            {
+                                "id": "BT",
+                                "name": "BHUTAN"
+                            },
+                            {
+                                "id": "BO",
+                                "name": "BOLIVIA, PLURINATIONAL STATE OF"
+                            },
+                            {
+                                "id": "BQ",
+                                "name": "BONAIRE, SINT EUSTATIUS AND SABA"
+                            },
+                            {
+                                "id": "BA",
+                                "name": "BOSNIA AND HERZEGOVINA"
+                            },
+                            {
+                                "id": "BW",
+                                "name": "BOTSWANA"
+                            },
+                            {
+                                "id": "BV",
+                                "name": "BOUVET ISLAND"
+                            },
+                            {
+                                "id": "BR",
+                                "name": "BRAZIL"
+                            },
+                            {
+                                "id": "IO",
+                                "name": "BRITISH INDIAN OCEAN TERRITORY"
+                            },
+                            {
+                                "id": "BN",
+                                "name": "BRUNEI DARUSSALAM"
+                            },
+                            {
+                                "id": "BG",
+                                "name": "BULGARIA"
+                            },
+                            {
+                                "id": "BF",
+                                "name": "BURKINA FASO"
+                            },
+                            {
+                                "id": "BI",
+                                "name": "BURUNDI"
+                            },
+                            {
+                                "id": "KH",
+                                "name": "CAMBODIA"
+                            },
+                            {
+                                "id": "CM",
+                                "name": "CAMEROON"
+                            },
+                            {
+                                "id": "CA",
+                                "name": "CANADA"
+                            },
+                            {
+                                "id": "CV",
+                                "name": "CAPE VERDE"
+                            },
+                            {
+                                "id": "KY",
+                                "name": "CAYMAN ISLANDS"
+                            },
+                            {
+                                "id": "CF",
+                                "name": "CENTRAL AFRICAN REPUBLIC"
+                            },
+                            {
+                                "id": "TD",
+                                "name": "CHAD"
+                            },
+                            {
+                                "id": "CL",
+                                "name": "CHILE"
+                            },
+                            {
+                                "id": "CN",
+                                "name": "CHINA"
+                            },
+                            {
+                                "id": "CX",
+                                "name": "CHRISTMAS ISLAND"
+                            },
+                            {
+                                "id": "CC",
+                                "name": "COCOS (KEELING) ISLANDS"
+                            },
+                            {
+                                "id": "CO",
+                                "name": "COLOMBIA"
+                            },
+                            {
+                                "id": "KM",
+                                "name": "COMOROS"
+                            },
+                            {
+                                "id": "CG",
+                                "name": "CONGO"
+                            },
+                            {
+                                "id": "CD",
+                                "name": "CONGO, THE DEMOCRATIC REPUBLIC OF THE"
+                            },
+                            {
+                                "id": "CK",
+                                "name": "COOK ISLANDS"
+                            },
+                            {
+                                "id": "CR",
+                                "name": "COSTA RICA"
+                            },
+                            {
+                                "id": "CI",
+                                "name": "CÔTE D'IVOIRE"
+                            },
+                            {
+                                "id": "HR",
+                                "name": "CROATIA"
+                            },
+                            {
+                                "id": "CU",
+                                "name": "CUBA"
+                            },
+                            {
+                                "id": "CW",
+                                "name": "CURAÇAO"
+                            },
+                            {
+                                "id": "CY",
+                                "name": "CYPRUS"
+                            },
+                            {
+                                "id": "CZ",
+                                "name": "CZECH REPUBLIC"
+                            },
+                            {
+                                "id": "DK",
+                                "name": "DENMARK"
+                            },
+                            {
+                                "id": "DJ",
+                                "name": "DJIBOUTI"
+                            },
+                            {
+                                "id": "DM",
+                                "name": "DOMINICA"
+                            },
+                            {
+                                "id": "DO",
+                                "name": "DOMINICAN REPUBLIC"
+                            },
+                            {
+                                "id": "EC",
+                                "name": "ECUADOR"
+                            },
+                            {
+                                "id": "EG",
+                                "name": "EGYPT"
+                            },
+                            {
+                                "id": "SV",
+                                "name": "EL SALVADOR"
+                            },
+                            {
+                                "id": "GQ",
+                                "name": "EQUATORIAL GUINEA"
+                            },
+                            {
+                                "id": "ER",
+                                "name": "ERITREA"
+                            },
+                            {
+                                "id": "EE",
+                                "name": "ESTONIA"
+                            },
+                            {
+                                "id": "ET",
+                                "name": "ETHIOPIA"
+                            },
+                            {
+                                "id": "FK",
+                                "name": "FALKLAND ISLANDS (MALVINAS)"
+                            },
+                            {
+                                "id": "FO",
+                                "name": "FAROE ISLANDS"
+                            },
+                            {
+                                "id": "FJ",
+                                "name": "FIJI"
+                            },
+                            {
+                                "id": "FI",
+                                "name": "FINLAND"
+                            },
+                            {
+                                "id": "FR",
+                                "name": "FRANCE"
+                            },
+                            {
+                                "id": "GF",
+                                "name": "FRENCH GUIANA"
+                            },
+                            {
+                                "id": "PF",
+                                "name": "FRENCH POLYNESIA"
+                            },
+                            {
+                                "id": "TF",
+                                "name": "FRENCH SOUTHERN TERRITORIES"
+                            },
+                            {
+                                "id": "GA",
+                                "name": "GABON"
+                            },
+                            {
+                                "id": "GM",
+                                "name": "GAMBIA"
+                            },
+                            {
+                                "id": "GE",
+                                "name": "GEORGIA"
+                            },
+                            {
+                                "id": "DE",
+                                "name": "GERMANY"
+                            },
+                            {
+                                "id": "GH",
+                                "name": "GHANA"
+                            },
+                            {
+                                "id": "GI",
+                                "name": "GIBRALTAR"
+                            },
+                            {
+                                "id": "GR",
+                                "name": "GREECE"
+                            },
+                            {
+                                "id": "GL",
+                                "name": "GREENLAND"
+                            },
+                            {
+                                "id": "GD",
+                                "name": "GRENADA"
+                            },
+                            {
+                                "id": "GP",
+                                "name": "GUADELOUPE"
+                            },
+                            {
+                                "id": "GU",
+                                "name": "GUAM"
+                            },
+                            {
+                                "id": "GT",
+                                "name": "GUATEMALA"
+                            },
+                            {
+                                "id": "GG",
+                                "name": "GUERNSEY"
+                            },
+                            {
+                                "id": "GN",
+                                "name": "GUINEA"
+                            },
+                            {
+                                "id": "GW",
+                                "name": "GUINEA-BISSAU"
+                            },
+                            {
+                                "id": "GY",
+                                "name": "GUYANA"
+                            },
+                            {
+                                "id": "HT",
+                                "name": "HAITI"
+                            },
+                            {
+                                "id": "HM",
+                                "name": "HEARD ISLAND AND MCDONALD ISLANDS"
+                            },
+                            {
+                                "id": "VA",
+                                "name": "HOLY SEE (VATICAN CITY STATE)"
+                            },
+                            {
+                                "id": "HN",
+                                "name": "HONDURAS"
+                            },
+                            {
+                                "id": "HK",
+                                "name": "HONG KONG"
+                            },
+                            {
+                                "id": "HU",
+                                "name": "HUNGARY"
+                            },
+                            {
+                                "id": "IS",
+                                "name": "ICELAND"
+                            },
+                            {
+                                "id": "IN",
+                                "name": "INDIA"
+                            },
+                            {
+                                "id": "ID",
+                                "name": "INDONESIA"
+                            },
+                            {
+                                "id": "IR",
+                                "name": "IRAN, ISLAMIC REPUBLIC OF"
+                            },
+                            {
+                                "id": "IQ",
+                                "name": "IRAQ"
+                            },
+                            {
+                                "id": "IE",
+                                "name": "IRELAND"
+                            },
+                            {
+                                "id": "IM",
+                                "name": "ISLE OF MAN"
+                            },
+                            {
+                                "id": "IL",
+                                "name": "ISRAEL"
+                            },
+                            {
+                                "id": "IT",
+                                "name": "ITALY"
+                            },
+                            {
+                                "id": "JM",
+                                "name": "JAMAICA"
+                            },
+                            {
+                                "id": "JP",
+                                "name": "JAPAN"
+                            },
+                            {
+                                "id": "JE",
+                                "name": "JERSEY"
+                            },
+                            {
+                                "id": "JO",
+                                "name": "JORDAN"
+                            },
+                            {
+                                "id": "KZ",
+                                "name": "KAZAKHSTAN"
+                            },
+                            {
+                                "id": "KE",
+                                "name": "KENYA"
+                            },
+                            {
+                                "id": "KI",
+                                "name": "KIRIBATI"
+                            },
+                            {
+                                "id": "KP",
+                                "name": "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF"
+                            },
+                            {
+                                "id": "KR",
+                                "name": "KOREA, REPUBLIC OF"
+                            },
+                            {
+                                "id": "XK",
+                                "name": "KOSOVO"
+                            },
+                            {
+                                "id": "KW",
+                                "name": "KUWAIT"
+                            },
+                            {
+                                "id": "KG",
+                                "name": "KYRGYZSTAN"
+                            },
+                            {
+                                "id": "LA",
+                                "name": "LAO PEOPLE'S DEMOCRATIC REPUBLIC"
+                            },
+                            {
+                                "id": "LV",
+                                "name": "LATVIA"
+                            },
+                            {
+                                "id": "LB",
+                                "name": "LEBANON"
+                            },
+                            {
+                                "id": "LS",
+                                "name": "LESOTHO"
+                            },
+                            {
+                                "id": "LR",
+                                "name": "LIBERIA"
+                            },
+                            {
+                                "id": "LY",
+                                "name": "LIBYA"
+                            },
+                            {
+                                "id": "LI",
+                                "name": "LIECHTENSTEIN"
+                            },
+                            {
+                                "id": "LT",
+                                "name": "LITHUANIA"
+                            },
+                            {
+                                "id": "LU",
+                                "name": "LUXEMBOURG"
+                            },
+                            {
+                                "id": "MO",
+                                "name": "MACAO"
+                            },
+                            {
+                                "id": "MK",
+                                "name": "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF"
+                            },
+                            {
+                                "id": "MG",
+                                "name": "MADAGASCAR"
+                            },
+                            {
+                                "id": "MW",
+                                "name": "MALAWI"
+                            },
+                            {
+                                "id": "MY",
+                                "name": "MALAYSIA"
+                            },
+                            {
+                                "id": "MV",
+                                "name": "MALDIVES"
+                            },
+                            {
+                                "id": "ML",
+                                "name": "MALI"
+                            },
+                            {
+                                "id": "MT",
+                                "name": "MALTA"
+                            },
+                            {
+                                "id": "MH",
+                                "name": "MARSHALL ISLANDS"
+                            },
+                            {
+                                "id": "MQ",
+                                "name": "MARTINIQUE"
+                            },
+                            {
+                                "id": "MR",
+                                "name": "MAURITANIA"
+                            },
+                            {
+                                "id": "MU",
+                                "name": "MAURITIUS"
+                            },
+                            {
+                                "id": "YT",
+                                "name": "MAYOTTE"
+                            },
+                            {
+                                "id": "MX",
+                                "name": "MEXICO"
+                            },
+                            {
+                                "id": "FM",
+                                "name": "MICRONESIA, FEDERATED STATES OF"
+                            },
+                            {
+                                "id": "MD",
+                                "name": "MOLDOVA, REPUBLIC OF"
+                            },
+                            {
+                                "id": "MC",
+                                "name": "MONACO"
+                            },
+                            {
+                                "id": "MN",
+                                "name": "MONGOLIA"
+                            },
+                            {
+                                "id": "ME",
+                                "name": "MONTENEGRO"
+                            },
+                            {
+                                "id": "MS",
+                                "name": "MONTSERRAT"
+                            },
+                            {
+                                "id": "MA",
+                                "name": "MOROCCO"
+                            },
+                            {
+                                "id": "MZ",
+                                "name": "MOZAMBIQUE"
+                            },
+                            {
+                                "id": "MM",
+                                "name": "MYANMAR"
+                            },
+                            {
+                                "id": "NA",
+                                "name": "NAMIBIA"
+                            },
+                            {
+                                "id": "NR",
+                                "name": "NAURU"
+                            },
+                            {
+                                "id": "NP",
+                                "name": "NEPAL"
+                            },
+                            {
+                                "id": "NL",
+                                "name": "NETHERLANDS"
+                            },
+                            {
+                                "id": "NC",
+                                "name": "NEW CALEDONIA"
+                            },
+                            {
+                                "id": "NZ",
+                                "name": "NEW ZEALAND"
+                            },
+                            {
+                                "id": "NI",
+                                "name": "NICARAGUA"
+                            },
+                            {
+                                "id": "NE",
+                                "name": "NIGER"
+                            },
+                            {
+                                "id": "NG",
+                                "name": "NIGERIA"
+                            },
+                            {
+                                "id": "NU",
+                                "name": "NIUE"
+                            },
+                            {
+                                "id": "NF",
+                                "name": "NORFOLK ISLAND"
+                            },
+                            {
+                                "id": "MP",
+                                "name": "NORTHERN MARIANA ISLANDS"
+                            },
+                            {
+                                "id": "NO",
+                                "name": "NORWAY"
+                            },
+                            {
+                                "id": "OM",
+                                "name": "OMAN"
+                            },
+                            {
+                                "id": "PK",
+                                "name": "PAKISTAN"
+                            },
+                            {
+                                "id": "PW",
+                                "name": "PALAU"
+                            },
+                            {
+                                "id": "PS",
+                                "name": "PALESTINE, STATE OF"
+                            },
+                            {
+                                "id": "PA",
+                                "name": "PANAMA"
+                            },
+                            {
+                                "id": "PG",
+                                "name": "PAPUA NEW GUINEA"
+                            },
+                            {
+                                "id": "PY",
+                                "name": "PARAGUAY"
+                            },
+                            {
+                                "id": "PE",
+                                "name": "PERU"
+                            },
+                            {
+                                "id": "PH",
+                                "name": "PHILIPPINES"
+                            },
+                            {
+                                "id": "PN",
+                                "name": "PITCAIRN"
+                            },
+                            {
+                                "id": "PL",
+                                "name": "POLAND"
+                            },
+                            {
+                                "id": "PT",
+                                "name": "PORTUGAL"
+                            },
+                            {
+                                "id": "PR",
+                                "name": "PUERTO RICO"
+                            },
+                            {
+                                "id": "QA",
+                                "name": "QATAR"
+                            },
+                            {
+                                "id": "RE",
+                                "name": "RÉUNION"
+                            },
+                            {
+                                "id": "RO",
+                                "name": "ROMANIA"
+                            },
+                            {
+                                "id": "RU",
+                                "name": "RUSSIAN FEDERATION"
+                            },
+                            {
+                                "id": "RW",
+                                "name": "RWANDA"
+                            },
+                            {
+                                "id": "BL",
+                                "name": "SAINT BARTHÉLEMY"
+                            },
+                            {
+                                "id": "SH",
+                                "name": "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA"
+                            },
+                            {
+                                "id": "KN",
+                                "name": "SAINT KITTS AND NEVIS"
+                            },
+                            {
+                                "id": "LC",
+                                "name": "SAINT LUCIA"
+                            },
+                            {
+                                "id": "MF",
+                                "name": "SAINT MARTIN (FRENCH PART)"
+                            },
+                            {
+                                "id": "PM",
+                                "name": "SAINT PIERRE AND MIQUELON"
+                            },
+                            {
+                                "id": "VC",
+                                "name": "SAINT VINCENT AND THE GRENADINES"
+                            },
+                            {
+                                "id": "WS",
+                                "name": "SAMOA"
+                            },
+                            {
+                                "id": "SM",
+                                "name": "SAN MARINO"
+                            },
+                            {
+                                "id": "ST",
+                                "name": "SAO TOME AND PRINCIPE"
+                            },
+                            {
+                                "id": "SA",
+                                "name": "SAUDI ARABIA"
+                            },
+                            {
+                                "id": "SN",
+                                "name": "SENEGAL"
+                            },
+                            {
+                                "id": "RS",
+                                "name": "SERBIA"
+                            },
+                            {
+                                "id": "SC",
+                                "name": "SEYCHELLES"
+                            },
+                            {
+                                "id": "SL",
+                                "name": "SIERRA LEONE"
+                            },
+                            {
+                                "id": "SG",
+                                "name": "SINGAPORE"
+                            },
+                            {
+                                "id": "SX",
+                                "name": "SINT MAARTEN (DUTCH PART)"
+                            },
+                            {
+                                "id": "SK",
+                                "name": "SLOVAKIA"
+                            },
+                            {
+                                "id": "SI",
+                                "name": "SLOVENIA"
+                            },
+                            {
+                                "id": "SB",
+                                "name": "SOLOMON ISLANDS"
+                            },
+                            {
+                                "id": "SO",
+                                "name": "SOMALIA"
+                            },
+                            {
+                                "id": "ZA",
+                                "name": "SOUTH AFRICA"
+                            },
+                            {
+                                "id": "GS",
+                                "name": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"
+                            },
+                            {
+                                "id": "SS",
+                                "name": "SOUTH SUDAN"
+                            },
+                            {
+                                "id": "ES",
+                                "name": "SPAIN"
+                            },
+                            {
+                                "id": "LK",
+                                "name": "SRI LANKA"
+                            },
+                            {
+                                "id": "SD",
+                                "name": "SUDAN"
+                            },
+                            {
+                                "id": "SR",
+                                "name": "SURINAME"
+                            },
+                            {
+                                "id": "SJ",
+                                "name": "SVALBARD AND JAN MAYEN"
+                            },
+                            {
+                                "id": "SZ",
+                                "name": "SWAZILAND"
+                            },
+                            {
+                                "id": "SE",
+                                "name": "SWEDEN"
+                            },
+                            {
+                                "id": "CH",
+                                "name": "SWITZERLAND"
+                            },
+                            {
+                                "id": "SY",
+                                "name": "SYRIAN ARAB REPUBLIC"
+                            },
+                            {
+                                "id": "TW",
+                                "name": "TAIWAN, PROVINCE OF CHINA"
+                            },
+                            {
+                                "id": "TJ",
+                                "name": "TAJIKISTAN"
+                            },
+                            {
+                                "id": "TZ",
+                                "name": "TANZANIA, UNITED REPUBLIC OF"
+                            },
+                            {
+                                "id": "TH",
+                                "name": "THAILAND"
+                            },
+                            {
+                                "id": "TL",
+                                "name": "TIMOR-LESTE"
+                            },
+                            {
+                                "id": "TG",
+                                "name": "TOGO"
+                            },
+                            {
+                                "id": "TK",
+                                "name": "TOKELAU"
+                            },
+                            {
+                                "id": "TO",
+                                "name": "TONGA"
+                            },
+                            {
+                                "id": "TT",
+                                "name": "TRINIDAD AND TOBAGO"
+                            },
+                            {
+                                "id": "TN",
+                                "name": "TUNISIA"
+                            },
+                            {
+                                "id": "TR",
+                                "name": "TURKEY"
+                            },
+                            {
+                                "id": "TM",
+                                "name": "TURKMENISTAN"
+                            },
+                            {
+                                "id": "TC",
+                                "name": "TURKS AND CAICOS ISLANDS"
+                            },
+                            {
+                                "id": "TV",
+                                "name": "TUVALU"
+                            },
+                            {
+                                "id": "UG",
+                                "name": "UGANDA"
+                            },
+                            {
+                                "id": "UA",
+                                "name": "UKRAINE"
+                            },
+                            {
+                                "id": "AE",
+                                "name": "UNITED ARAB EMIRATES"
+                            },
+                            {
+                                "id": "GB",
+                                "name": "UNITED KINGDOM"
+                            },
+                            {
+                                "id": "US",
+                                "name": "UNITED STATES"
+                            },
+                            {
+                                "id": "UM",
+                                "name": "UNITED STATES MINOR OUTLYING ISLANDS"
+                            },
+                            {
+                                "id": "UY",
+                                "name": "URUGUAY"
+                            },
+                            {
+                                "id": "UZ",
+                                "name": "UZBEKISTAN"
+                            },
+                            {
+                                "id": "VU",
+                                "name": "VANUATU"
+                            },
+                            {
+                                "id": "VE",
+                                "name": "VENEZUELA, BOLIVARIAN REPUBLIC OF"
+                            },
+                            {
+                                "id": "VN",
+                                "name": "VIET NAM"
+                            },
+                            {
+                                "id": "VG",
+                                "name": "VIRGIN ISLANDS, BRITISH"
+                            },
+                            {
+                                "id": "VI",
+                                "name": "VIRGIN ISLANDS, U.S."
+                            },
+                            {
+                                "id": "WF",
+                                "name": "WALLIS AND FUTUNA"
+                            },
+                            {
+                                "id": "EH",
+                                "name": "WESTERN SAHARA"
+                            },
+                            {
+                                "id": "YE",
+                                "name": "YEMEN"
+                            },
+                            {
+                                "id": "ZM",
+                                "name": "ZAMBIA"
+                            },
+                            {
+                                "id": "ZW",
+                                "name": "ZIMBABWE"
+                            }
+                        ],
+                        "sublist": []
+                    }
+                ]
+            },
+            {
+                "name": "trafficInformation",
+                "label": "Traffic Information",
+                "type": "set",
+                "required": false,
+                "collapsed": true,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": null,
+                "value": null,
+                "values": [],
+                "sublist": [
+                    {
+                        "name": "profileName",
+                        "label": "Profile Name",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    }
+                ]
+            },
+            {
+                "name": "vars",
+                "label": "Vars",
+                "type": "set",
+                "required": false,
+                "collapsed": true,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": null,
+                "value": null,
+                "values": [],
+                "sublist": [
+                    {
+                        "name": "var1",
+                        "label": "Var 1",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    },
+                    {
+                        "name": "var2",
+                        "label": "Var 2",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    },
+                    {
+                        "name": "var9",
+                        "label": "Var 9",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    },
+                    {
+                        "name": "var10",
+                        "label": "Var 10",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    }
+                ]
+            },
+            {
+                "name": "reportBy1",
+                "label": "Report By",
+                "type": "list",
+                "required": true,
+                "collapsed": false,
+                "filter": true,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": "statDate",
+                "values": [
+                    {
+                        "id": "statDate",
+                        "name": "Date"
+                    },
+                    {
+                        "id": "statMonth",
+                        "name": "Month"
+                    },
+                    {
+                        "id": "product",
+                        "name": "Product"
+                    },
+                    {
+                        "id": "platform",
+                        "name": "Platform"
+                    },
+                    {
+                        "id": "profile",
+                        "name": "Profile"
+                    },
+                    {
+                        "id": "landingPageInfo",
+                        "name": "Landing Page"
+                    },
+                    {
+                        "id": "countryCode",
+                        "name": "Country"
+                    },
+                    {
+                        "id": "merchant",
+                        "name": "Merchant"
+                    },
+                    {
+                        "id": "ref_url",
+                        "name": "Referrer"
+                    },
+                    {
+                        "id": "var1",
+                        "name": "Var 1"
+                    },
+                    {
+                        "id": "var2",
+                        "name": "Var 2"
+                    },
+                    {
+                        "id": "var9",
+                        "name": "Var 9"
+                    },
+                    {
+                        "id": "var10",
+                        "name": "Var 10"
+                    }
+                ],
+                "sublist": []
+            },
+            {
+                "name": "reportBy2",
+                "label": "Report By",
+                "type": "list",
+                "required": false,
+                "collapsed": false,
+                "filter": true,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": "var1",
+                "values": [
+                    {
+                        "id": "statDate",
+                        "name": "Date"
+                    },
+                    {
+                        "id": "statMonth",
+                        "name": "Month"
+                    },
+                    {
+                        "id": "product",
+                        "name": "Product"
+                    },
+                    {
+                        "id": "platform",
+                        "name": "Platform"
+                    },
+                    {
+                        "id": "profile",
+                        "name": "Profile"
+                    },
+                    {
+                        "id": "landingPageInfo",
+                        "name": "Landing Page"
+                    },
+                    {
+                        "id": "countryCode",
+                        "name": "Country"
+                    },
+                    {
+                        "id": "merchant",
+                        "name": "Merchant"
+                    },
+                    {
+                        "id": "ref_url",
+                        "name": "Referrer"
+                    },
+                    {
+                        "id": "var1",
+                        "name": "Var 1"
+                    },
+                    {
+                        "id": "var2",
+                        "name": "Var 2"
+                    },
+                    {
+                        "id": "var9",
+                        "name": "Var 9"
+                    },
+                    {
+                        "id": "var10",
+                        "name": "Var 10"
+                    }
+                ],
+                "sublist": []
+            },
+            {
+                "name": "reportBy4",
+                "label": "Report By",
+                "type": "list",
+                "required": false,
+                "collapsed": false,
+                "filter": true,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [
+                    {
+                        "id": "statDate",
+                        "name": "Date"
+                    },
+                    {
+                        "id": "statMonth",
+                        "name": "Month"
+                    },
+                    {
+                        "id": "product",
+                        "name": "Product"
+                    },
+                    {
+                        "id": "platform",
+                        "name": "Platform"
+                    },
+                    {
+                        "id": "profile",
+                        "name": "Profile"
+                    },
+                    {
+                        "id": "landingPageInfo",
+                        "name": "Landing Page"
+                    },
+                    {
+                        "id": "countryCode",
+                        "name": "Country"
+                    },
+                    {
+                        "id": "merchant",
+                        "name": "Merchant"
+                    },
+                    {
+                        "id": "ref_url",
+                        "name": "Referrer"
+                    },
+                    {
+                        "id": "var1",
+                        "name": "Var 1"
+                    },
+                    {
+                        "id": "var2",
+                        "name": "Var 2"
+                    },
+                    {
+                        "id": "var9",
+                        "name": "Var 9"
+                    },
+                    {
+                        "id": "var10",
+                        "name": "Var 10"
+                    }
+                ],
+                "sublist": []
+            }
+        ],
+        "output": [
+            {
+                "name": "statDate",
+                "label": "Date",
+                "type": "date",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": "yyyy-MM-dd",
+                "jsDateTimeFormat": "yy-mm-dd",
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "statMonth",
+                "label": "Month",
+                "type": "date",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": "yyyy-MM",
+                "jsDateTimeFormat": "yy-mm-dd",
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "product",
+                "label": "Product",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "merchant",
+                "label": "Merchant",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "platform",
+                "label": "Platform",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "profile",
+                "label": "Profile",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "landingPageInfo",
+                "label": "Landing Page",
+                "type": "set",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": null,
+                "value": null,
+                "values": [],
+                "sublist": [
+                    {
+                        "name": "landingPageName",
+                        "label": "Landing Page Name",
+                        "type": "text",
+                        "required": false,
+                        "collapsed": false,
+                        "filter": false,
+                        "internal": false,
+                        "dateTimeFormat": null,
+                        "jsDateTimeFormat": null,
+                        "precision": 3,
+                        "value": null,
+                        "values": [],
+                        "sublist": []
+                    }
+                ]
+            },
+            {
+                "name": "countryCode",
+                "label": "Country",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "ref_url",
+                "label": "Referrer",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "var1",
+                "label": "Var 1",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "var2",
+                "label": "Var 2",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "var9",
+                "label": "Var 9",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "var10",
+                "label": "Var 10",
+                "type": "text",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "imps",
+                "label": "Impressions",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "real_clicks",
+                "label": "Unique Clicks",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "casinosignups",
+                "label": "Casino Signups Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "sportsignups",
+                "label": "Sport Signups Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "casinorfd_amt",
+                "label": "Casino RFD Amt",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "casinorfd_cnt",
+                "label": "Casino RFD Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "sportrfd_amt",
+                "label": "Sport RFD Amt",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "sportrfd_cnt",
+                "label": "Sport RFD Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "signup_to_rfd",
+                "label": "Signup To RFD Ratio",
+                "type": "percent",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "deposit_cnt",
+                "label": "Deposit Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "withdraws_cnt",
+                "label": "Withdrawal Cnt",
+                "type": "long",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "withdraws_amt",
+                "label": "Withdrawal Amt",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "commission",
+                "label": "Commission",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "casinonetgamingcms",
+                "label": "Casino Net Gaming Commission",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "sportnetgamingcms",
+                "label": "Sport Net Gaming Commission",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "total_bonuses_eur",
+                "label": "Total Bonuses Eur",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "wins",
+                "label": "Wins",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "nr",
+                "label": "Net Gaming",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            },
+            {
+                "name": "nr_after_tax",
+                "label": "Net Gaming After Deduction",
+                "type": "number",
+                "required": false,
+                "collapsed": false,
+                "filter": false,
+                "internal": false,
+                "dateTimeFormat": null,
+                "jsDateTimeFormat": null,
+                "precision": 3,
+                "value": null,
+                "values": [],
+                "sublist": []
+            }
+        ],
+        "language": "EN",
+        "name": "Traffic Stats",
+        "id": "1266"
+    },
+    "sc": {
+        "offset": 0,
+        "limit": 1000,
+        "order": [
+            {
+                "ascending": true,
+                "column": "1"
+            }
+        ],
+        "namedQuery": ""
+    }
+}

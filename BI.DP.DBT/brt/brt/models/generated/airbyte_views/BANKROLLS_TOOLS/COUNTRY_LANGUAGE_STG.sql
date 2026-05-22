@@ -1,0 +1,21 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_EMITTED_AT"],
+    unique_key = '_AIRBYTE_AB_ID',
+    schema = "BRT",
+    tags = [ "top-level-intermediate" ]
+) }}
+-- SQL model to build a hash column based on the values of this record
+-- depends_on: {{ ref('COUNTRY_LANGUAGE_AB2') }}
+select
+    {{ dbt_utils.surrogate_key([
+        'UPDATED_AT',
+        'CREATED_AT',
+        'ID',
+        'LANGUAGE_ID',
+        'COUNTRY_ID',
+    ]) }} as _AIRBYTE_COUNTRY_LANGUAGE_HASHID,
+    tmp.*
+from {{ ref('COUNTRY_LANGUAGE_AB2') }} tmp
+-- COUNTRY_LANGUAGE
+where 1 = 1
+

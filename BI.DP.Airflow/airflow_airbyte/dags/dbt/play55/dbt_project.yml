@@ -1,0 +1,46 @@
+name: 'play55_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'play55'
+
+model-paths:
+- models
+docs-paths:
+- docs
+analysis-paths:
+- analysis
+test-paths:
+- tests
+seed-paths:
+- data
+macro-paths:
+- macros
+
+target-path: "../build"
+log-path: "../logs"
+packages-install-path: "../dbt"
+clean-targets:
+  - "build"
+  - "dbt_modules"
+
+quoting:
+  database: true
+  schema: false
+  identifier: false
+
+models:
+  +transient: false
+  play55_analytics:
+    +materialized: table
+    +database: RAW
+
+    play55:
+      +schema: APOSTA_PREMIA
+      +tags: ['play55']
+      +materialized: incremental
+      +on_schema_change: sync_all_columns
+
+vars:
+  # Date range for incremental loads
+  max_lookback_days: 7

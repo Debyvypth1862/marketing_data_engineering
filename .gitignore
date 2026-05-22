@@ -1,0 +1,55 @@
+# ==========================
+# Secrets & Credentials
+# ==========================
+**/secrets/
+**/.env
+**/.env.*
+*.pem
+*.key
+
+# ==========================
+# CI/CD Workflows (contain internal infra references)
+# ==========================
+**/.github/
+
+# ==========================
+# Docker logs
+# ==========================
+**/docker-logs/
+
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+env/
+venv/
+.venv/
+
+# ==========================
+# dbt
+# ==========================
+**/target/
+**/dbt_packages/
+**/logs/
+**/dbt_modules/
+
+# ==========================
+# IDE & OS
+# ==========================
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Git subfolders (from merged repos)
+# ==========================
+**/.git/

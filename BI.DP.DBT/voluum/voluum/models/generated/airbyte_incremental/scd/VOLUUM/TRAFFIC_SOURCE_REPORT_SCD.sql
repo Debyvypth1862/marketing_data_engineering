@@ -1,0 +1,335 @@
+{{ config(
+    cluster_by = ["_AIRBYTE_ACTIVE_ROW", "_AIRBYTE_UNIQUE_KEY_SCD", "_AIRBYTE_EMITTED_AT"],
+    unique_key = "_AIRBYTE_UNIQUE_KEY_SCD",
+    database = env_var('SCD_DATABASE'),
+    schema = "VOLUUM",
+    post_hook = ["
+                    {%
+                    set final_table_relation = adapter.get_relation(
+                            database=this.database,
+                            schema=this.schema,
+                            identifier='TRAFFIC_SOURCE_REPORT'
+                        )
+                    %}
+                    {#
+                    If the final table doesn't exist, then obviously we can't delete anything from it.
+                    Also, after a reset, the final table is created without the _airbyte_unique_key column (this column is created during the first sync)
+                    So skip this deletion if the column doesn't exist. (in this case, the table is guaranteed to be empty anyway)
+                    #}
+                    {%
+                    if final_table_relation is not none and '_AIRBYTE_UNIQUE_KEY' in adapter.get_columns_in_relation(final_table_relation)|map(attribute='name')
+                    %}
+                    -- Delete records which are no longer active:
+                    -- This query is equivalent, but the left join version is more performant:
+                    -- delete from final_table where unique_key in (
+                    --     select unique_key from scd_table where 1 = 1 <incremental_clause(normalized_at, final_table)>
+                    -- ) and unique_key not in (
+                    --     select unique_key from scd_table where active_row = 1 <incremental_clause(normalized_at, final_table)>
+                    -- )
+                    -- We're incremental against normalized_at rather than emitted_at because we need to fetch the SCD
+                    -- entries that were _updated_ recently. This is because a deleted record will have an SCD record
+                    -- which was emitted a long time ago, but recently re-normalized to have active_row = 0.
+                    delete from {{ final_table_relation }} where {{ final_table_relation }}._AIRBYTE_UNIQUE_KEY in (
+                        select recent_records.unique_key
+                        from (
+                                select distinct _AIRBYTE_UNIQUE_KEY as unique_key
+                                from {{ this }}
+                                where 1=1 {{ incremental_clause('_AIRBYTE_NORMALIZED_AT', adapter.quote(this.schema) + '.' + adapter.quote('TRAFFIC_SOURCE_REPORT')) }}
+                            ) recent_records
+                            left join (
+                                select _AIRBYTE_UNIQUE_KEY as unique_key, count(_AIRBYTE_UNIQUE_KEY) as active_count
+                                from {{ this }}
+                                where _AIRBYTE_ACTIVE_ROW = 1 {{ incremental_clause('_AIRBYTE_NORMALIZED_AT', adapter.quote(this.schema) + '.' + adapter.quote('TRAFFIC_SOURCE_REPORT')) }}
+                                group by _AIRBYTE_UNIQUE_KEY
+                            ) active_counts
+                            on recent_records.unique_key = active_counts.unique_key
+                        where active_count is null or active_count = 0
+                    )
+                    {% else %}
+                    -- We have to have a non-empty query, so just do a noop delete
+                    delete from {{ this }} where 1=0
+                    {% endif %}
+                    ",
+                    "UPDATE {{ env_var('snowflake_db_dbt') }}.{{ env_var('snowflake_schema_dbt') }}.{{ env_var('snowflake_table_dbt') }}
+                    SET IS_PROCESSED = TRUE, PROCESSED_AT= {{ current_timestamp() }}, STATUS = 'Success',RECORD_COUNT = DBT_INTERNAL_SOURCE.RECORD_COUNT
+                    FROM (SELECT S3_PATH, count(*) as RECORD_COUNT
+                                FROM {{ this }} WHERE _AIRBYTE_EMITTED_AT >= CURRENT_DATE GROUP BY 1 ) as DBT_INTERNAL_SOURCE
+                        WHERE PATH = DBT_INTERNAL_SOURCE.S3_PATH",
+                    "drop view {{ ref('TRAFFIC_SOURCE_REPORT_STG') }}"],
+    tags = [ "top-level" ]
+) }}
+-- depends_on: ref('TRAFFIC_SOURCE_REPORT_STG')
+with
+{% if is_incremental() %}
+new_data as (
+    -- retrieve incremental "new" data
+    select
+        *
+    from {{ ref('TRAFFIC_SOURCE_REPORT_STG')  }}
+    -- TRAFFIC_SOURCE_REPORT from {{ source('VOLUUM', '_AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT') }}
+    where 1 = 1
+    {{ incremental_clause('_AIRBYTE_EMITTED_AT', this) }}
+),
+new_data_ids as (
+    -- build a subset of _AIRBYTE_UNIQUE_KEY from rows that are new
+    select distinct
+        {{ dbt_utils.surrogate_key([
+            'DATE',
+            'CREATED',
+            'TRAFFIC_SOURCEID',
+            'TRAFFIC_SOURCE_WORKSPACEID',
+        ]) }} as _AIRBYTE_UNIQUE_KEY
+    from new_data
+),
+empty_new_data as (
+    -- build an empty table to only keep the table's column types
+    select * from new_data where 1 = 0
+),
+previous_active_scd_data as (
+    -- retrieve "incomplete old" data that needs to be updated with an end date because of new changes
+    select
+        {{ star_intersect(ref('TRAFFIC_SOURCE_REPORT_STG'), this, from_alias='inc_data', intersect_alias='this_data') }}
+    from {{ this }} as this_data
+    -- make a join with new_data using primary key to filter active data that need to be updated only
+    join new_data_ids on this_data._AIRBYTE_UNIQUE_KEY = new_data_ids._AIRBYTE_UNIQUE_KEY
+    -- force left join to NULL values (we just need to transfer column types only for the star_intersect macro on schema changes)
+    left join empty_new_data as inc_data on this_data._AIRBYTE_AB_ID = inc_data._AIRBYTE_AB_ID
+    where _AIRBYTE_ACTIVE_ROW = 1
+),
+input_data as (
+    select {{ dbt_utils.star(ref('TRAFFIC_SOURCE_REPORT_STG')) }} from new_data
+    union all
+    select {{ dbt_utils.star(ref('TRAFFIC_SOURCE_REPORT_STG')) }} from previous_active_scd_data
+),
+{% else %}
+input_data as (
+    select *
+    from {{ ref('TRAFFIC_SOURCE_REPORT_STG')  }}
+    -- TRAFFIC_SOURCE_REPORT from {{ source('VOLUUM', '_AIRBYTE_RAW_TRAFFIC_SOURCE_REPORT') }}
+),
+{% endif %}
+scd_data as (
+    -- SQL model to build a Type 2 Slowly Changing Dimension (SCD) table for each record identified by their primary key
+    select
+      {{ dbt_utils.surrogate_key([
+        'DATE',
+        'CREATED',
+        'TRAFFIC_SOURCEID',
+        'TRAFFIC_SOURCE_WORKSPACEID',
+      ]) }} as _AIRBYTE_UNIQUE_KEY,
+        CVR,
+        ACTIONS,
+        AP,
+        CLICKID_ARGUMENT,
+        CLICK_CAP_CLICK_COUNT,
+        CLICK_CAP_VALUE,
+        CLICKS,
+        CONVERSION_CAP_CONVERSION_COUNT,
+        CONVERSION_CAP_VALUE,
+        CONVERSIONS,
+        COST,
+        COST_ARGUMENT,
+        COST_SOURCES,
+        CPV,
+        CR,
+        CREATED,
+        CTR,
+        CUSTOM_CONVERSIONS1,
+        CUSTOM_CONVERSIONS10,
+        CUSTOM_CONVERSIONS11,
+        CUSTOM_CONVERSIONS2,
+        CUSTOM_CONVERSIONS3,
+        CUSTOM_CONVERSIONS4,
+        CUSTOM_CONVERSIONS5,
+        CUSTOM_CONVERSIONS6,
+        CUSTOM_CONVERSIONS7,
+        CUSTOM_CONVERSIONS8,
+        CUSTOM_CONVERSIONS9,
+        CUSTOM_REVENUE1,
+        CUSTOM_REVENUE10,
+        CUSTOM_REVENUE11,
+        CUSTOM_REVENUE2,
+        CUSTOM_REVENUE3,
+        CUSTOM_REVENUE4,
+        CUSTOM_REVENUE5,
+        CUSTOM_REVENUE6,
+        CUSTOM_REVENUE7,
+        CUSTOM_REVENUE8,
+        CUSTOM_REVENUE9,
+        CUSTOM_VARIABLE1_TS,
+        CUSTOM_VARIABLE2_TS,
+        CUSTOM_VARIABLE3_TS,
+        CUSTOM_VARIABLE4_TS,
+        CUSTOM_VARIABLE5_TS,
+        CUSTOM_VARIABLE6_TS,
+        CUSTOM_VARIABLE7_TS,
+        CUSTOM_VARIABLE8_TS,
+        CUSTOM_VARIABLE9_TS,
+        CUSTOM_VARIABLE10_TS,
+        CV,
+        DELETED,
+        ECPA,
+        ECPC,
+        ECPM,
+        EPC,
+        EPV,
+        ERRORS,
+        ICTR,
+        IMPRESSIONS,
+        MTTI,
+        POSTBACK_URL,
+        PROFIT,
+        READ_ONLY,
+        REVENUE,
+        ROI,
+        RPM,
+        SUSPICIOUS_CLICKS,
+        SUSPICIOUS_CLICKS_PERCENTAGE,
+        SUSPICIOUS_VISITS,
+        SUSPICIOUS_VISITS_PERCENTAGE,
+        TIME_TO_INSTALL_RANGE0,
+        TIME_TO_INSTALL_RANGE1,
+        TIME_TO_INSTALL_RANGE2,
+        TRAFFIC_SOURCEID,
+        TRAFFIC_SOURCE_NAME,
+        TRAFFIC_SOURCE_WORKSPACEID,
+        TRAFFIC_SOURCE_WORKSPACE_NAME,
+        UNIQUE_CLICKS,
+        UNIQUE_VISITS,
+        VISITS,
+        DATE,
+    DATE as _AIRBYTE_START_AT,
+      lag(DATE) over (
+        partition by DATE, CREATED, TRAFFIC_SOURCEID, TRAFFIC_SOURCE_WORKSPACEID
+        order by
+            DATE is null asc,
+            DATE desc,
+            _AIRBYTE_EMITTED_AT desc
+      ) as _AIRBYTE_END_AT,
+      case when row_number() over (
+        partition by DATE, CREATED, TRAFFIC_SOURCEID, TRAFFIC_SOURCE_WORKSPACEID
+        order by
+            DATE is null asc,
+            DATE desc,
+            _AIRBYTE_EMITTED_AT desc
+      ) = 1 then 1 else 0 end as _AIRBYTE_ACTIVE_ROW,
+      _AIRBYTE_AB_ID,
+      _AIRBYTE_EMITTED_AT,
+      S3_PATH,
+      _AIRBYTE_TRAFFIC_SOURCE_REPORT_HASHID
+    from input_data
+),
+dedup_data as (
+    select
+        -- we need to ensure de-duplicated rows for merge/update queries
+        -- additionally, we generate a unique key for the scd table
+        row_number() over (
+            partition by
+                _AIRBYTE_UNIQUE_KEY,
+                _AIRBYTE_START_AT,
+                _AIRBYTE_EMITTED_AT
+            order by _AIRBYTE_ACTIVE_ROW desc, _AIRBYTE_AB_ID
+        ) as _AIRBYTE_ROW_NUM,
+        {{ dbt_utils.surrogate_key([
+          '_AIRBYTE_UNIQUE_KEY',
+          '_AIRBYTE_START_AT',
+          '_AIRBYTE_EMITTED_AT'
+        ]) }} as _AIRBYTE_UNIQUE_KEY_SCD,
+        scd_data.*
+    from scd_data
+)
+select
+    _AIRBYTE_UNIQUE_KEY,
+    _AIRBYTE_UNIQUE_KEY_SCD,
+    CVR,
+    ACTIONS,
+    AP,
+    CLICKID_ARGUMENT,
+    CLICK_CAP_CLICK_COUNT,
+    CLICK_CAP_VALUE,
+    CLICKS,
+    CONVERSION_CAP_CONVERSION_COUNT,
+    CONVERSION_CAP_VALUE,
+    CONVERSIONS,
+    COST,
+    COST_ARGUMENT,
+    COST_SOURCES,
+    CPV,
+    CR,
+    CREATED,
+    CTR,
+    CUSTOM_CONVERSIONS1,
+    CUSTOM_CONVERSIONS10,
+    CUSTOM_CONVERSIONS11,
+    CUSTOM_CONVERSIONS2,
+    CUSTOM_CONVERSIONS3,
+    CUSTOM_CONVERSIONS4,
+    CUSTOM_CONVERSIONS5,
+    CUSTOM_CONVERSIONS6,
+    CUSTOM_CONVERSIONS7,
+    CUSTOM_CONVERSIONS8,
+    CUSTOM_CONVERSIONS9,
+    CUSTOM_REVENUE1,
+    CUSTOM_REVENUE10,
+    CUSTOM_REVENUE11,
+    CUSTOM_REVENUE2,
+    CUSTOM_REVENUE3,
+    CUSTOM_REVENUE4,
+    CUSTOM_REVENUE5,
+    CUSTOM_REVENUE6,
+    CUSTOM_REVENUE7,
+    CUSTOM_REVENUE8,
+    CUSTOM_REVENUE9,
+    CUSTOM_VARIABLE1_TS,
+    CUSTOM_VARIABLE2_TS,
+    CUSTOM_VARIABLE3_TS,
+    CUSTOM_VARIABLE4_TS,
+    CUSTOM_VARIABLE5_TS,
+    CUSTOM_VARIABLE6_TS,
+    CUSTOM_VARIABLE7_TS,
+    CUSTOM_VARIABLE8_TS,
+    CUSTOM_VARIABLE9_TS,
+    CUSTOM_VARIABLE10_TS,
+    CV,
+    DELETED,
+    ECPA,
+    ECPC,
+    ECPM,
+    EPC,
+    EPV,
+    ERRORS,
+    ICTR,
+    IMPRESSIONS,
+    MTTI,
+    POSTBACK_URL,
+    PROFIT,
+    READ_ONLY,
+    REVENUE,
+    ROI,
+    RPM,
+    SUSPICIOUS_CLICKS,
+    SUSPICIOUS_CLICKS_PERCENTAGE,
+    SUSPICIOUS_VISITS,
+    SUSPICIOUS_VISITS_PERCENTAGE,
+    TIME_TO_INSTALL_RANGE0,
+    TIME_TO_INSTALL_RANGE1,
+    TIME_TO_INSTALL_RANGE2,
+    TRAFFIC_SOURCEID,
+    TRAFFIC_SOURCE_NAME,
+    TRAFFIC_SOURCE_WORKSPACEID,
+    TRAFFIC_SOURCE_WORKSPACE_NAME,
+    UNIQUE_CLICKS,
+    UNIQUE_VISITS,
+    VISITS,
+    DATE,
+    _AIRBYTE_START_AT,
+    _AIRBYTE_END_AT,
+    _AIRBYTE_ACTIVE_ROW,
+    _AIRBYTE_AB_ID,
+    _AIRBYTE_EMITTED_AT,
+    S3_PATH,
+    {{ current_timestamp() }} as _AIRBYTE_NORMALIZED_AT,
+    _AIRBYTE_TRAFFIC_SOURCE_REPORT_HASHID
+from dedup_data 
+where _AIRBYTE_ROW_NUM = 1
+
